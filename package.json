@@ -1,0 +1,20 @@
+{
+  "name": "aiwritehuman",
+  "version": "2.0.0",
+  "description": "AI text humaniser with Paddle Payments and Supabase",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "nodemon --env-file-if-exists=.env server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

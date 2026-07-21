@@ -1,0 +1,27 @@
+# Environment variables — never commit
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Separate project that lives in this folder — has its own repo
+trading-information-tool/
+
+# Local scratch/debug scripts — not part of the app, may hold ad-hoc keys
+test_api.js
+test_args.json
+test_fill.js
+test_key.js
+
+# Tooling cache
+.impeccable/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
