@@ -1023,11 +1023,11 @@
       <div class="footer-links">
         <button type="button" class="footer-link" onclick="scrollToPricing()">Pricing</button>
         <span class="footer-dot">&middot;</span>
-        <button type="button" class="footer-link" onclick="openTermsModal()">Terms of Service</button>
+        <a class="footer-link" href="/terms" onclick="event.preventDefault(); openTermsModal();">Terms of Service</a>
         <span class="footer-dot">&middot;</span>
-        <button type="button" class="footer-link" onclick="openPrivacyModal()">Privacy Policy</button>
+        <a class="footer-link" href="/privacy" onclick="event.preventDefault(); openPrivacyModal();">Privacy Policy</a>
         <span class="footer-dot">&middot;</span>
-        <button type="button" class="footer-link" onclick="openRefundModal()">Refund Policy</button>
+        <a class="footer-link" href="/refund" onclick="event.preventDefault(); openRefundModal();">Refund Policy</a>
         <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="mailto:thapelo@aiwritehuman.com">Contact &amp; Enquiries</a>
         <span class="footer-dot">&middot;</span>
@@ -1434,6 +1434,14 @@
     function closeTermsModal()  { $('termsModal').classList.remove('open'); }
     function openPrivacyModal() { $('privacyModal').classList.add('open'); }
     function closePrivacyModal(){ $('privacyModal').classList.remove('open'); }
+
+    // Deep links: visiting /terms, /privacy or /refund directly opens the policy
+    (function openModalFromPath() {
+      const p = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+      if (p === '/terms')   openTermsModal();
+      else if (p === '/privacy') openPrivacyModal();
+      else if (p === '/refund')  openRefundModal();
+    })();
 
     function handleSubscribe(planId) {
       if (!getToken()) { closePricingModal(); openAuthModal(); return; }
