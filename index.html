@@ -492,6 +492,18 @@
     }
     .stat-back .stat-lbl { color: rgba(255,255,255,0.70); }
 
+    /* ── Public pricing section ─────────────────────────────── */
+    .pricing-section { padding: 34px 32px; margin-bottom: 18px; scroll-margin-top: 24px; }
+    .pricing-head { text-align: center; margin-bottom: 24px; }
+    .pricing-title {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.1rem); color: var(--text);
+      margin-bottom: 8px;
+      text-shadow: 0 0 24px rgba(59,130,246,0.18);
+    }
+    .pricing-subtitle { font-size: 0.9rem; color: var(--text-muted); }
+    .pricing-section .pricing-grid { margin-top: 0; }
+
     /* ── How it works ───────────────────────────────────────── */
     .how { padding: 28px 32px; margin-bottom: 18px; }
     .how-title {
@@ -996,8 +1008,21 @@
       </div>
     </div>
 
+    <!-- ── PRICING (public, always visible) ───────────────────── -->
+    <section class="glass pricing-section" id="pricing">
+      <div class="pricing-head">
+        <h2 class="pricing-title">Simple, transparent pricing</h2>
+        <p class="pricing-subtitle">Monthly plans. Cancel anytime. All prices in USD.</p>
+      </div>
+      <div class="pricing-grid" id="pricingGridPublic">
+        <p style="color:var(--text-muted);font-size:0.85rem;text-align:center;">Loading plans&hellip;</p>
+      </div>
+    </section>
+
     <footer>
       <div class="footer-links">
+        <button type="button" class="footer-link" onclick="scrollToPricing()">Pricing</button>
+        <span class="footer-dot">&middot;</span>
         <button type="button" class="footer-link" onclick="openTermsModal()">Terms of Service</button>
         <span class="footer-dot">&middot;</span>
         <button type="button" class="footer-link" onclick="openPrivacyModal()">Privacy Policy</button>
@@ -1361,6 +1386,46 @@
       }
     }
     function closePricingModal() { $('pricingModal').classList.remove('open'); }
+
+    // ── Public pricing section (visible without login) ───────────────────────
+    const PLAN_LIMITS_UI = { free: { words: 200, reqs: 1 }, basic: { words: 1000, reqs: 80 }, pro: { words: 1500, reqs: 200 }, ultra: { words: 3000, reqs: null } };
+
+    function planCardHTML(p, currentPlanId) {
+      const lim    = PLAN_LIMITS_UI[p.id] || {};
+      const price  = p.price_cents === 0 ? 'Free' : `$${(p.price_cents / 100).toFixed(0)}`;
+      const isCurr = p.id === currentPlanId;
+      const reqs   = lim.reqs === null ? 'Unlimited' : `${lim.reqs}/mo`;
+      return `
+      <div class="price-card${isCurr ? ' current-plan' : ''}${p.id === 'pro' ? ' popular' : ''}">
+        ${p.id === 'pro' ? '<span class="popular-badge">Most Popular</span>' : '<span></span>'}
+        <div class="price-name">${p.name}</div>
+        <div class="price-amount">${price}<span>/mo</span></div>
+        <div class="price-feat">
+          <strong>${(lim.words || 0).toLocaleString()}</strong> words/gen<br>
+          <strong>${reqs}</strong> requests<br>
+        </div>
+        <button type="button" class="btn-subscribe${isCurr ? ' active-plan' : ''}"
+          onclick="handleSubscribe('${p.id}')" ${isCurr ? 'disabled' : ''}>
+          ${isCurr ? 'Current Plan' : p.id === 'free' ? 'Get Started' : 'Choose ' + p.name}
+        </button>
+      </div>`;
+    }
+
+    async function renderPublicPricing() {
+      const grid = $('pricingGridPublic');
+      if (!grid) return;
+      try {
+        const plans = await fetch('/api/plans').then(r => r.json());
+        const currentPlanId = state.userProfile?.plan?.id || null;
+        grid.innerHTML = plans.map(p => planCardHTML(p, currentPlanId)).join('');
+      } catch {
+        grid.innerHTML = '<p style="color:#f87171;font-size:0.85rem;text-align:center;">Could not load pricing. Please refresh.</p>';
+      }
+    }
+
+    function scrollToPricing() { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); }
+
+    renderPublicPricing();
 
     // ── Legal modals ─────────────────────────────────────────────────────────
     function openRefundModal()  { $('refundModal').classList.add('open'); }
