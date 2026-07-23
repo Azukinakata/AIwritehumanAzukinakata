@@ -64,6 +64,7 @@ app.get('/api/config', (_req, res) => {
     supabaseAnonKey:  process.env.SUPABASE_ANON_KEY  || '',
     paddleClientToken: process.env.PADDLE_CLIENT_TOKEN || '',
     paddlePriceIds:   PADDLE_PRICE_IDS,
+    aiDetectionEnabled: !!process.env.GPTZERO_API_KEY,
   });
 });
 
@@ -147,6 +148,67 @@ app.get('/api/plans', async (_req, res) => {
     .order('price_cents');
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// POST /api/detect  — AI-content detection via GPTZero (login required)
+// Returns overall AI percentage + per-sentence generated_prob for highlighting.
+// ═══════════════════════════════════════════════════════════════════════════════
+const GPTZERO_API_KEY = process.env.GPTZERO_API_KEY;
+
+app.post('/api/detect', async (req, res) => {
+  try {
+    await authenticateUser(req); // gate behind login to protect the paid API
+  } catch (err) {
+    return res.status(err.status || 401).json({ error: err.message, code: err.code });
+  }
+
+  if (!GPTZERO_API_KEY) {
+    return res.status(503).json({ error: 'AI detection is not configured yet.' });
+  }
+
+  const text = (req.body?.text || '').trim();
+  if (text.length < 20) {
+    return res.status(400).json({ error: 'Please provide at least a sentence or two to analyse.' });
+  }
+
+  try {
+    const gz = await fetch('https://api.gptzero.me/v2/predict/text', {
+      method: 'POST',
+      headers: {
+        'x-api-key':    GPTZERO_API_KEY,
+        'Content-Type': 'application/json',
+        'Accept':       'application/json',
+      },
+      body: JSON.stringify({ document: text }),
+    });
+
+    const json = await gz.json();
+    if (!gz.ok) {
+      console.error('[gptzero]', gz.status, JSON.stringify(json).slice(0, 200));
+      return res.status(502).json({ error: 'Detection service error. Please try again.' });
+    }
+
+    const doc = json.documents?.[0] || {};
+    const aiProb =
+      doc.class_probabilities?.ai ??
+      doc.completely_generated_prob ??
+      doc.average_generated_prob ?? 0;
+
+    const sentences = (doc.sentences || []).map(s => ({
+      sentence: s.sentence,
+      prob:     s.generated_prob ?? 0,
+    }));
+
+    res.json({
+      aiPercentage:   Math.round(aiProb * 100),
+      predictedClass: doc.predicted_class || null,
+      sentences,
+    });
+  } catch (err) {
+    console.error('[detect] error:', err.message);
+    res.status(502).json({ error: 'Detection failed. Please try again.' });
+  }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════

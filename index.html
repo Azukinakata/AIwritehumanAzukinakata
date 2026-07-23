@@ -321,6 +321,49 @@
     }
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
+    /* ── AI detection panel ─────────────────────────────────── */
+    .detect-panel {
+      border-top: 1px solid rgba(96,165,250,0.12);
+      padding: 16px 22px; animation: fade-up 0.3s ease both;
+    }
+    .detect-score {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      font-size: 0.9rem; color: var(--text-mid); margin-bottom: 12px;
+    }
+    .detect-score strong { color: var(--text); font-size: 1.05rem; }
+    .detect-meter {
+      width: 120px; height: 8px; border-radius: 999px;
+      background: rgba(96,165,250,0.14); overflow: hidden; flex-shrink: 0;
+    }
+    .detect-meter-fill {
+      display: block; height: 100%; width: 100%;
+      transform: scaleX(0); transform-origin: left center;
+      background: linear-gradient(90deg, #34d399 0%, #f59e0b 55%, #f87171 100%);
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .detect-class {
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 9px; border-radius: 999px;
+      background: rgba(96,165,250,0.14); color: #93c5fd;
+    }
+    .detect-text {
+      font-size: 0.92rem; line-height: 1.85; color: #cbd5e1;
+      max-height: 260px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+    }
+    .ai-flag {
+      background: rgba(250,204,21,0.38); color: #fef9c3;
+      border-radius: 3px; padding: 0.5px 2px;
+      box-shadow: 0 0 0 1px rgba(250,204,21,0.25);
+    }
+    .detect-legend {
+      margin-top: 10px; font-size: 0.72rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ai-flag-swatch {
+      display: inline-block; width: 22px; height: 12px; border-radius: 3px;
+      background: rgba(250,204,21,0.38); box-shadow: 0 0 0 1px rgba(250,204,21,0.25);
+    }
+
     .util-row { display: flex; gap: 7px; }
     .btn-sm {
       flex: 1; padding: 8px 10px;
@@ -832,9 +875,25 @@
           <span class="panel-chip" id="outputBadge" style="display:none;">DONE</span>
         </div>
         <div class="output-content placeholder" id="outputText">Your humanised text will appear here...</div>
+
+        <!-- AI detection result (GPTZero) -->
+        <div class="detect-panel hidden" id="detectPanel">
+          <div class="detect-score">
+            <span class="detect-meter"><span class="detect-meter-fill" id="detectMeterFill"></span></span>
+            <span>AI content: <strong id="detectPct">0%</strong></span>
+            <span class="detect-class" id="detectClass"></span>
+          </div>
+          <div class="detect-text" id="detectText"></div>
+          <div class="detect-legend"><span class="ai-flag-swatch"></span> highlighted = reads as AI-generated</div>
+        </div>
+
         <div class="panel-foot">
           <span class="char-count" id="outputMeta">&nbsp;</span>
           <div class="util-row">
+            <button class="btn-sm hidden" id="detectBtn" onclick="handleDetect()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+              AI Check
+            </button>
             <button class="btn-sm" id="copyBtn" onclick="handleCopy()">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
               Copy
@@ -1190,6 +1249,9 @@
     async function getSupabase() {
       if (_supabase) return _supabase;
       _config = await fetch('/api/config').then(r => r.json());
+
+      // Show the AI Check button only when detection is configured server-side
+      if (_config.aiDetectionEnabled) $('detectBtn')?.classList.remove('hidden');
 
       // Init Supabase
       if (_config.supabaseUrl && _config.supabaseAnonKey) {
@@ -1688,7 +1750,57 @@
       outputEl.className = 'output-content placeholder';
       $('outputMeta').innerHTML = '&nbsp;';
       $('outputBadge').style.display = 'none';
+      $('detectPanel').classList.add('hidden');
       resetStats();
+    }
+
+    // ── AI detection (GPTZero) ────────────────────────────────────────────────
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+
+    async function handleDetect() {
+      const text = $('outputText').textContent;
+      if (!text || text.includes('will appear here') || text.includes('Error:')) {
+        showToast('Humanise some text first, then check it.');
+        return;
+      }
+      if (!getToken()) { showToast('Sign in to run an AI check.'); openAuthModal(); return; }
+
+      const btn = $('detectBtn');
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Checking…';
+      try {
+        const res = await fetch('/api/detect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+          body: JSON.stringify({ text }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `Detection failed (${res.status})`);
+        renderDetect(data);
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = original;
+      }
+    }
+
+    function renderDetect(data) {
+      const pct = Math.max(0, Math.min(100, data.aiPercentage || 0));
+      $('detectPct').textContent = pct + '%';
+      $('detectMeterFill').style.transform = `scaleX(${pct / 100})`;
+      const cls = $('detectClass');
+      if (data.predictedClass) { cls.textContent = data.predictedClass; cls.style.display = ''; }
+      else { cls.style.display = 'none'; }
+
+      const html = (data.sentences || [])
+        .map(s => s.prob > 0.5 ? `<mark class="ai-flag">${escapeHtml(s.sentence)}</mark>` : escapeHtml(s.sentence))
+        .join(' ');
+      $('detectText').innerHTML = html || escapeHtml($('outputText').textContent);
+      $('detectPanel').classList.remove('hidden');
     }
 
     // ── Stats ─────────────────────────────────────────────────────────────────
