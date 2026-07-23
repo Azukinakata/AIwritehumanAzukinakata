@@ -64,7 +64,7 @@ app.get('/api/config', (_req, res) => {
     supabaseAnonKey:  process.env.SUPABASE_ANON_KEY  || '',
     paddleClientToken: process.env.PADDLE_CLIENT_TOKEN || '',
     paddlePriceIds:   PADDLE_PRICE_IDS,
-    aiDetectionEnabled: !!process.env.GPTZERO_API_KEY,
+    aiDetectionEnabled: !!process.env.ORIGINALITY_API_KEY,
   });
 });
 
@@ -151,10 +151,11 @@ app.get('/api/plans', async (_req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// POST /api/detect  — AI-content detection via GPTZero (login required)
-// Returns overall AI percentage + per-sentence generated_prob for highlighting.
+// POST /api/detect  — AI-content detection via Originality.ai (login required)
+// Returns overall AI percentage + per-sentence AI probability for highlighting.
 // ═══════════════════════════════════════════════════════════════════════════════
-const GPTZERO_API_KEY = process.env.GPTZERO_API_KEY;
+const ORIGINALITY_API_KEY = process.env.ORIGINALITY_API_KEY;
+const ORIGINALITY_MODEL   = process.env.ORIGINALITY_MODEL || '1'; // model version
 
 app.post('/api/detect', async (req, res) => {
   try {
@@ -163,7 +164,7 @@ app.post('/api/detect', async (req, res) => {
     return res.status(err.status || 401).json({ error: err.message, code: err.code });
   }
 
-  if (!GPTZERO_API_KEY) {
+  if (!ORIGINALITY_API_KEY) {
     return res.status(503).json({ error: 'AI detection is not configured yet.' });
   }
 
@@ -173,37 +174,37 @@ app.post('/api/detect', async (req, res) => {
   }
 
   try {
-    const gz = await fetch('https://api.gptzero.me/v2/predict/text', {
+    const oa = await fetch('https://api.originality.ai/api/v1/scan/ai', {
       method: 'POST',
       headers: {
-        'x-api-key':    GPTZERO_API_KEY,
-        'Content-Type': 'application/json',
-        'Accept':       'application/json',
+        'X-OAI-API-KEY': ORIGINALITY_API_KEY,
+        'Content-Type':  'application/json',
+        'Accept':        'application/json',
       },
-      body: JSON.stringify({ document: text }),
+      body: JSON.stringify({ content: text, title: 'AIwritehuman scan', aiModelVersion: ORIGINALITY_MODEL }),
     });
 
-    const json = await gz.json();
-    if (!gz.ok) {
-      console.error('[gptzero]', gz.status, JSON.stringify(json).slice(0, 200));
-      return res.status(502).json({ error: 'Detection service error. Please try again.' });
+    const json = await oa.json();
+    if (!oa.ok || json.success === false) {
+      console.error('[originality]', oa.status, JSON.stringify(json).slice(0, 300));
+      return res.status(502).json({ error: json.error || 'Detection service error. Please try again.' });
     }
 
-    const doc = json.documents?.[0] || {};
-    const aiProb =
-      doc.class_probabilities?.ai ??
-      doc.completely_generated_prob ??
-      doc.average_generated_prob ?? 0;
+    // Overall AI fraction (0-1). Originality returns score.ai (AI) / score.original (human).
+    const aiProb = json.score?.ai ?? (json.score?.original != null ? 1 - json.score.original : 0);
 
-    const sentences = (doc.sentences || []).map(s => ({
-      sentence: s.sentence,
-      prob:     s.generated_prob ?? 0,
-    }));
+    // Per-sentence: sentenceScores[] with { text, score } where score is the AI likelihood (0-1).
+    const rows = json.sentenceScores || json.sentence_scores || [];
+    const sentences = rows.map(s => ({
+      sentence: s.text ?? s.sentence ?? '',
+      prob:     s.score ?? s.ai_score ?? s.aiScore ?? 0,
+    })).filter(s => s.sentence);
 
     res.json({
       aiPercentage:   Math.round(aiProb * 100),
-      predictedClass: doc.predicted_class || null,
+      predictedClass: null,
       sentences,
+      creditsUsed:    json.credits_used ?? null,
     });
   } catch (err) {
     console.error('[detect] error:', err.message);
