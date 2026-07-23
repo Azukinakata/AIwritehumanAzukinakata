@@ -65,6 +65,17 @@ The four techniques RESTRUCTURE the existing text. They never ADD to it.
 • Keep the output within ±10% of the source word count. Humanising should mostly hold length steady or shorten it; if your draft is running longer, you are adding content — cut it back to the original's ideas only.
 • Every claim, fact, and example in the output must trace directly to the input. When in doubt, say less, not more.
 
+## ════ WRITE WITH HIGH PERPLEXITY AND BURSTINESS (what detectors actually measure) ════
+
+AI detectors flag text that is statistically PREDICTABLE (low perplexity) and UNIFORM (low burstiness). Human writing is neither. Raise both — through word choice and sentence structure, NEVER by adding facts and NEVER by inserting invisible characters, unusual Unicode, or deliberate typos (those corrupt the text and are not humanising). This is the ceiling of legitimate humanising, and it lowers detection scores precisely because the text genuinely reads as human.
+
+• **Lexical unpredictability.** At each point, avoid the single most statistically obvious next word. Where a natural but slightly less expected word fits, take it. Prefer concrete, specific nouns and verbs over generic abstractions — "cut" over "reduce", "use" over "utilise", a real noun over filler like "solutions", "aspects", "factors", "elements". Don't cycle synonyms for their own sake; just stop defaulting to the most predictable choice every time.
+• **Structural unpredictability.** Break grammatical symmetry. Use the occasional sentence fragment. Begin a sentence with "And", "But", or "So" now and then. Let a sentence pivot mid-way with a short parenthetical aside. Avoid tidy parallelism and evenly balanced clauses — human sentences are lopsided.
+• **Voice and idiosyncrasy (SUBSTITUTE, do not add).** Let a light human register show where the tone allows: a contraction, a colloquial turn, a direct address to the reader, or a brief rhetorical question that reframes a point ALREADY in the text. This replaces a flat declarative sentence — it never adds new information, and it must stay within the ±10% length cap.
+• **Rhythm across the paragraph.** Do not resolve every sentence the same way. Some should land hard and short. Others wander. The variance between neighbouring sentence lengths matters as much as the lengths themselves.
+
+TONE CONDITION: In academic, scientific, professional, and technical tones, keep colloquial voice and rhetorical questions to a minimum — raise perplexity through precise, less-predictable word choice and structural variety instead. In blog, casual, and creative tones, let the human voice run warmer.
+
 ## TARGET TONE: ${toneDescription}
 HUMANIZATION INTENSITY: ${intensityLabel} (${intensity}/10)
 
@@ -159,7 +170,7 @@ Pure pattern removal produces sterile, voiceless prose. That is just as detectab
 • LENGTH: keep the output within ±10% of the source word count. If longer, you have added content — trim back to the original's ideas. Prefer holding length steady or shortening.
 • NO NEW CONTENT: do not introduce any claim, example, analogy, statistic, or explanatory clause that is not already in the input. Every sentence must trace to the source.
 • The final text must contain zero em dashes (—) or en dashes (–) — scan and verify before finishing
-• Output must pass Turnitin, GPTZero, Scribbr, and Originality.ai`;
+• The target is text that reads as genuinely human: high perplexity, high burstiness, zero template phrasing, natural transitions. Pursue this through the writing itself — never through hidden characters, unusual Unicode, or tricks, which corrupt the text and fail as soon as they are known.`;
 }
 
 module.exports = { buildSystemPrompt };
