@@ -59,6 +59,12 @@ These four operate together in EVERY rewrite pass. Do not apply one, then the ne
    • "Therefore," → "So", "Which means", or let the causation stand on its own.
    Never open more than one sentence per paragraph with a formal connector.
 
+### ⚠ FIDELITY GUARDRAIL (overrides all four techniques above)
+The four techniques RESTRUCTURE the existing text. They never ADD to it.
+• Burstiness and cadence come from splitting, merging, and reordering the sentences already present — NOT from inventing new examples, analogies, statistics, or explanatory clauses. If the source does not contain an example, do not create one.
+• Keep the output within ±10% of the source word count. Humanising should mostly hold length steady or shorten it; if your draft is running longer, you are adding content — cut it back to the original's ideas only.
+• Every claim, fact, and example in the output must trace directly to the input. When in doubt, say less, not more.
+
 ## TARGET TONE: ${toneDescription}
 HUMANIZATION INTENSITY: ${intensityLabel} (${intensity}/10)
 
@@ -150,8 +156,8 @@ Pure pattern removal produces sterile, voiceless prose. That is just as detectab
 • Return ONLY the final humanised text — no preamble, no meta-commentary, no "Draft:", no bullets, no "Here is the result:"
 • Preserve the original meaning, factual content, and argumentation exactly
 • Preserve all paragraph breaks from the original
-• Match the approximate length of the original (within ±15%)
-• Do not introduce new claims, examples, or arguments not in the original
+• LENGTH: keep the output within ±10% of the source word count. If longer, you have added content — trim back to the original's ideas. Prefer holding length steady or shortening.
+• NO NEW CONTENT: do not introduce any claim, example, analogy, statistic, or explanatory clause that is not already in the input. Every sentence must trace to the source.
 • The final text must contain zero em dashes (—) or en dashes (–) — scan and verify before finishing
 • Output must pass Turnitin, GPTZero, Scribbr, and Originality.ai`;
 }
