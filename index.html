@@ -1385,20 +1385,42 @@
       btn.textContent = '…';
       $('authError').textContent = '';
 
-      const fn = state.authTab === 'signin'
-        ? sb.auth.signInWithPassword({ email, password: pass })
-        : sb.auth.signUp({ email, password: pass });
-
-      const { error } = await fn;
-      btn.disabled = false;
-      btn.textContent = state.authTab === 'signin' ? 'Sign In' : 'Create Account';
-
-      if (error) { $('authError').textContent = error.message; return; }
       if (state.authTab === 'signup') {
-        $('authError').style.color = '#6ee7b7';
-        $('authError').textContent = 'Check your email to confirm your account.';
+        // Create the account server-side (pre-confirmed, no email step), then sign in.
+        let body = {};
+        try {
+          const resp = await fetch('/api/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass }),
+          });
+          body = await resp.json().catch(() => ({}));
+          if (!resp.ok) {
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+            $('authError').textContent = body.error || 'Could not create your account. Please try again.';
+            return;
+          }
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
+          $('authError').textContent = 'Network error. Please try again.';
+          return;
+        }
+        const { error: signUpSignInErr } = await sb.auth.signInWithPassword({ email, password: pass });
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+        if (signUpSignInErr) { $('authError').textContent = signUpSignInErr.message; return; }
+        closeAuthModal();
+        showToast('Account created — welcome!');
         return;
       }
+
+      const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+
+      if (error) { $('authError').textContent = error.message; return; }
       closeAuthModal();
       showToast('Signed in!');
     }

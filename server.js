@@ -139,6 +139,44 @@ app.get('/api/me', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// POST /api/signup  — create an account WITHOUT a confirmation email.
+// The browser used to call supabase.auth.signUp() directly, but that path sends a
+// confirmation email through Supabase Auth; when the mailer fails (misconfigured
+// SMTP / provider error) the signup is rolled back and no one can register.
+// Here the service-role admin API creates a pre-confirmed user (email_confirm:true,
+// so no email is sent), and the on_auth_user_created trigger still provisions the
+// user_profiles row + free subscription. The browser then signs in with password.
+// ═══════════════════════════════════════════════════════════════════════════════
+app.post('/api/signup', async (req, res) => {
+  const email    = (req.body?.email    || '').trim().toLowerCase();
+  const password =  req.body?.password || '';
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+  }
+
+  const { data, error } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true, // mark verified up front so Auth sends no confirmation email
+  });
+
+  if (error) {
+    const dup = /already|exist|registered/i.test(error.message || '');
+    return res.status(dup ? 409 : 400).json({
+      error: dup
+        ? 'An account with this email already exists — please sign in instead.'
+        : (error.message || 'Could not create your account. Please try again.'),
+    });
+  }
+
+  res.json({ ok: true, userId: data?.user?.id });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // GET /api/plans  — list all available plans (public, used by pricing modal)
 // ═══════════════════════════════════════════════════════════════════════════════
 app.get('/api/plans', async (_req, res) => {
