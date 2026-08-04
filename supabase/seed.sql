@@ -7,8 +7,8 @@
 INSERT INTO plans (id, name, price_cents, words_per_generation, requests_per_month)
 VALUES
     ('free',  'Free',  0,    200,  1),
-    ('basic', 'Basic', 500,  1000, 80),
-    ('pro',   'Pro',   1200, 1500, 200),
+    ('basic', 'Basic', 1200, 1000, 80),
+    ('pro',   'Pro',   2000, 1500, 200),
     ('ultra', 'Ultra', 3500, 3000, NULL)  -- NULL = unlimited requests
 ON CONFLICT (id) DO UPDATE
     SET name                 = EXCLUDED.name,
