@@ -447,7 +447,7 @@ function offsetMonth(isoDate) {
 // ═══════════════════════════════════════════════════════════════════════════════
 app.post('/api/humanize', enforcePlan, (req, res) => {
   const {
-    text, selectedTone, intensity, british, hedging, variation, voiceSample,
+    text, selectedTone, intensity, british, hedging, variation, voiceSample, language,
   } = req.body;
 
   const { user, subscription, plan, usagePeriod, requestedWords, promptHash } = req;
@@ -459,6 +459,7 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
     hedging:      Number(hedging)    || 7,
     variation:    Number(variation)  || 8,
     voiceSample:  voiceSample || '',
+    language:     language === 'zh' ? 'zh' : 'en',
   });
 
   const payload = JSON.stringify({

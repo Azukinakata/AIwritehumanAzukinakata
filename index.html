@@ -958,6 +958,15 @@
       <!-- Sidebar controls -->
       <div class="sidebar">
 
+        <!-- Output language -->
+        <div class="glass scard" data-tilt>
+          <div class="scard-title">Output Language</div>
+          <div class="tone-grid" id="langGrid">
+            <button class="tone-btn active" data-lang="en">English</button>
+            <button class="tone-btn" data-lang="zh">中文</button>
+          </div>
+        </div>
+
         <!-- Tone -->
         <div class="glass scard" data-tilt>
           <div class="scard-title">Target Tone</div>
@@ -985,20 +994,22 @@
             <input type="range" id="intensity" min="1" max="10" value="8" oninput="onSlider(this)" title="Humanisation Intensity">
           </div>
 
-          <div class="slider-group">
-            <div class="slabel-row">
-              <span class="slabel-name">British English Strength</span>
-              <span class="slabel-val" id="britishVal">9</span>
+          <div id="enOnlyParams">
+            <div class="slider-group">
+              <div class="slabel-row">
+                <span class="slabel-name">British English Strength</span>
+                <span class="slabel-val" id="britishVal">9</span>
+              </div>
+              <input type="range" id="british" min="1" max="10" value="9" oninput="onSlider(this)" title="British English Strength">
             </div>
-            <input type="range" id="british" min="1" max="10" value="9" oninput="onSlider(this)" title="British English Strength">
-          </div>
 
-          <div class="slider-group">
-            <div class="slabel-row">
-              <span class="slabel-name">Academic Hedging</span>
-              <span class="slabel-val" id="hedgingVal">7</span>
+            <div class="slider-group">
+              <div class="slabel-row">
+                <span class="slabel-name">Academic Hedging</span>
+                <span class="slabel-val" id="hedgingVal">7</span>
+              </div>
+              <input type="range" id="hedging" min="1" max="10" value="7" oninput="onSlider(this)" title="Academic Hedging">
             </div>
-            <input type="range" id="hedging" min="1" max="10" value="7" oninput="onSlider(this)" title="Academic Hedging">
           </div>
 
           <div class="slider-group">
@@ -1274,6 +1285,7 @@
   <script>
     // ── State ────────────────────────────────────────────────────────────────
     const state = {
+      language: 'en',
       selectedTone: 'academic',
       intensity: 8,
       british: 9,
@@ -1637,6 +1649,16 @@
 
     document.querySelectorAll('input[type="range"]').forEach(onSlider);
 
+    // ── Output language selection ───────────────────────────────────────────
+    $('langGrid').addEventListener('click', e => {
+      const btn = e.target.closest('.tone-btn');
+      if (!btn) return;
+      document.querySelectorAll('#langGrid .tone-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.language = btn.dataset.lang;
+      $('enOnlyParams').classList.toggle('hidden', state.language === 'zh');
+    });
+
     // ── Tone selection ───────────────────────────────────────────────────────
     $('toneGrid').addEventListener('click', e => {
       const btn = e.target.closest('.tone-btn');
@@ -1688,6 +1710,7 @@
           },
           body: JSON.stringify({
             text,
+            language: state.language,
             selectedTone: state.selectedTone,
             intensity: state.intensity,
             british: state.british,
