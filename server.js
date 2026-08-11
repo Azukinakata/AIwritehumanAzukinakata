@@ -64,7 +64,7 @@ app.get('/api/config', (_req, res) => {
     supabaseAnonKey:  process.env.SUPABASE_ANON_KEY  || '',
     paddleClientToken: process.env.PADDLE_CLIENT_TOKEN || '',
     paddlePriceIds:   PADDLE_PRICE_IDS,
-    aiDetectionEnabled: !!process.env.ORIGINALITY_API_KEY,
+    aiDetectionEnabled: !!process.env.WINSTON_API_KEY,
   });
 });
 
@@ -192,57 +192,56 @@ app.get('/api/plans', async (_req, res) => {
 // POST /api/detect  — AI-content detection via Originality.ai (login required)
 // Returns overall AI percentage + per-sentence AI probability for highlighting.
 // ═══════════════════════════════════════════════════════════════════════════════
-const ORIGINALITY_API_KEY = process.env.ORIGINALITY_API_KEY;
-const ORIGINALITY_MODEL   = process.env.ORIGINALITY_MODEL || '1'; // model version
+const WINSTON_API_KEY   = process.env.WINSTON_API_KEY;
+const WINSTON_MIN_CHARS = 300; // Winston rejects shorter input outright
+
+async function callWinston(text) {
+  const wr = await fetch('https://api.gowinston.ai/v2/ai-content-detection', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${WINSTON_API_KEY}`,
+      'Content-Type':  'application/json',
+      'Accept':        'application/json',
+    },
+    body: JSON.stringify({ text, sentences: true }),
+  });
+  const json = await wr.json();
+  if (!wr.ok) {
+    throw new Error(json.message || json.error || `Winston error (${wr.status})`);
+  }
+  // Winston's "score" is a HUMAN-likelihood (0-100, higher = more human) — invert to match
+  // Originality's AI-probability convention (0-1, higher = more AI) used throughout this endpoint.
+  const aiProb = (100 - (json.score ?? 100)) / 100;
+  const sentences = (json.sentences || []).map(s => ({
+    sentence: s.text ?? '',
+    prob:     (100 - (s.score ?? 100)) / 100,
+  })).filter(s => s.sentence);
+  return { name: 'winston', aiProb, sentences, creditsUsed: json.credits_used ?? null };
+}
 
 app.post('/api/detect', async (req, res) => {
   try {
-    await authenticateUser(req); // gate behind login to protect the paid API
+    await authenticateUser(req); // gate behind login to protect the paid APIs
   } catch (err) {
     return res.status(err.status || 401).json({ error: err.message, code: err.code });
   }
 
-  if (!ORIGINALITY_API_KEY) {
+  if (!WINSTON_API_KEY) {
     return res.status(503).json({ error: 'AI detection is not configured yet.' });
   }
 
   const text = (req.body?.text || '').trim();
-  if (text.length < 20) {
-    return res.status(400).json({ error: 'Please provide at least a sentence or two to analyse.' });
+  if (text.length < WINSTON_MIN_CHARS) {
+    return res.status(400).json({ error: `Please provide at least ${WINSTON_MIN_CHARS} characters to analyse.` });
   }
 
   try {
-    const oa = await fetch('https://api.originality.ai/api/v1/scan/ai', {
-      method: 'POST',
-      headers: {
-        'X-OAI-API-KEY': ORIGINALITY_API_KEY,
-        'Content-Type':  'application/json',
-        'Accept':        'application/json',
-      },
-      body: JSON.stringify({ content: text, title: 'AIwritehuman scan', aiModelVersion: ORIGINALITY_MODEL }),
-    });
-
-    const json = await oa.json();
-    if (!oa.ok || json.success === false) {
-      console.error('[originality]', oa.status, JSON.stringify(json).slice(0, 300));
-      return res.status(502).json({ error: json.error || 'Detection service error. Please try again.' });
-    }
-
-    // Overall AI fraction (0-1). Originality returns score.ai (AI) / score.original (human).
-    const aiProb = json.score?.ai ?? (json.score?.original != null ? 1 - json.score.original : 0);
-
-    // Per-sentence: sentenceScores[] with { text, score } where score is the AI likelihood (0-1).
-    const rows = json.sentenceScores || json.sentence_scores || [];
-    const sentences = rows.map(s => ({
-      sentence: s.text ?? s.sentence ?? '',
-      prob:     s.score ?? s.ai_score ?? s.aiScore ?? 0,
-    })).filter(s => s.sentence);
-
+    const result = await callWinston(text);
     res.json({
-      aiPercentage:   Math.round(aiProb * 100),
+      aiPercentage:   Math.round(result.aiProb * 100),
       predictedClass: null,
-      sentences,
-      creditsUsed:    json.credits_used ?? null,
+      sentences:      result.sentences,
+      creditsUsed:    result.creditsUsed,
     });
   } catch (err) {
     console.error('[detect] error:', err.message);
