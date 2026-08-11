@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIwritehuman — Powered by Humanizer (33-Pattern Audit)</title>
+  <title>AIwritehuman — Powered by Humanizer (40-Pattern Audit)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -35,42 +35,68 @@
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
-      background: url('bg.png') center / cover fixed no-repeat;
+      background: var(--navy);
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
     /* ── Depth scene layers ─────────────────────────────────── */
+    .bg-photo {
+      position: fixed; inset: -16%;
+      background: url('bg.png') center / cover no-repeat;
+      filter: blur(20px) saturate(115%) brightness(0.4) contrast(1.08) url(#waveWarp);
+      transform: scale(1.32) translate3d(var(--px, 0px), var(--py, 0px), 0);
+      transition: transform 1.1s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none; z-index: 0; will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bg-photo { filter: blur(24px) saturate(115%) brightness(0.4) contrast(1.08); }
+    }
     .wash {
       position: fixed; inset: 0;
-      background: rgba(2,5,18,0.80);
+      background:
+        radial-gradient(130% 85% at 50% -8%, rgba(18,32,78,0.30) 0%, rgba(2,5,18,0.74) 52%, rgba(1,3,12,0.94) 100%),
+        linear-gradient(180deg, rgba(2,5,18,0.30) 0%, rgba(2,5,18,0.55) 45%, rgba(1,3,10,0.88) 100%);
       pointer-events: none; z-index: 0;
+    }
+    .grain {
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.05; mix-blend-mode: overlay;
+      pointer-events: none; z-index: 3;
     }
     .orb {
       position: fixed; border-radius: 50%;
-      filter: blur(90px);
       pointer-events: none; z-index: 0;
       animation: orb-drift 9s ease-in-out infinite;
     }
     .orb-1 {
       width: 640px; height: 640px;
-      background: radial-gradient(circle, rgba(59,130,246,0.32) 0%, transparent 65%);
+      background: radial-gradient(circle at 35% 35%, rgba(191,219,254,0.5) 0%, rgba(59,130,246,0.30) 30%, transparent 68%);
+      filter: blur(85px);
       top: -180px; left: -160px; animation-delay: 0s;
     }
     .orb-2 {
       width: 480px; height: 480px;
-      background: radial-gradient(circle, rgba(139,92,246,0.24) 0%, transparent 65%);
+      background: radial-gradient(circle at 40% 40%, rgba(216,180,254,0.4) 0%, rgba(139,92,246,0.26) 32%, transparent 68%);
+      filter: blur(100px);
       bottom: -100px; right: -120px; animation-delay: -3.5s;
     }
     .orb-3 {
       width: 380px; height: 380px;
-      background: radial-gradient(circle, rgba(6,182,212,0.18) 0%, transparent 65%);
+      background: radial-gradient(circle at 45% 45%, rgba(165,243,252,0.35) 0%, rgba(6,182,212,0.18) 32%, transparent 68%);
+      filter: blur(70px);
       top: 45%; left: 48%; animation-delay: -6.5s;
     }
     @keyframes orb-drift {
       0%,100% { transform: translate(0,0) scale(1); }
       50%      { transform: translate(0,-32px) scale(1.06); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bg-photo { transition: none; }
+      .orb { animation: none; }
     }
 
     /* ── Page wrapper ───────────────────────────────────────── */
@@ -777,11 +803,30 @@
 </head>
 
 <body>
+  <!-- Wave-warp filter: slow, continuous liquid ripple applied to the background photo -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="waveWarp" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" numOctaves="2" seed="7" stitchTiles="stitch" result="noise">
+        <animate attributeName="baseFrequency"
+          values="0.0018 0.004;0.003 0.0022;0.0014 0.005;0.0018 0.004"
+          dur="26s" repeatCount="indefinite" calcMode="spline"
+          keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" />
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G">
+        <animate attributeName="scale"
+          values="45;85;45" dur="12s" repeatCount="indefinite"
+          calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" />
+      </feDisplacementMap>
+    </filter>
+  </svg>
+
   <!-- Depth layers -->
+  <div class="bg-photo"></div>
   <div class="wash"></div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
+  <div class="grain"></div>
 
   <div class="wrap">
 
@@ -798,7 +843,7 @@
     <header class="hero">
       <div class="eyebrow">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Humanizer v2.8.2 &mdash; 33-Pattern Two-Pass Audit
+        Humanizer v2.9 &mdash; 40-Pattern Two-Pass Audit
       </div>
 
       <div class="brand-lockup">
@@ -815,7 +860,7 @@
         <span class="bdg bdg-b">&#9679; Claude Fable 5</span>
         <span class="bdg bdg-g">British English</span>
         <span class="bdg bdg-v">Voice Calibration</span>
-        <span class="bdg bdg-b">33-Pattern Audit</span>
+        <span class="bdg bdg-b">40-Pattern Audit</span>
         <span class="bdg bdg-b">Two-Pass Rewrite</span>
       </div>
     </header>
@@ -982,7 +1027,7 @@
             <div class="pw-icon">&#10022;</div>
             <div>
               <div style="font-weight:700;font-size:0.91rem;color:var(--navy);">Claude Fable 5</div>
-              <div style="font-size:0.70rem;color:var(--text-muted);">Humanizer v2.8.2 &middot; 33-Pattern Audit</div>
+              <div style="font-size:0.70rem;color:var(--text-muted);">Humanizer v2.9 &middot; 40-Pattern Audit</div>
             </div>
           </div>
           <p style="font-size:0.74rem;color:var(--text-muted);line-height:1.54;">Your API key stays server-side and is never exposed to the browser.</p>
@@ -1869,6 +1914,18 @@
         handleHumanize();
       }
     });
+
+    // ── Background parallax (respects reduced-motion) ─────────────────────────
+    (function initBgParallax() {
+      const bg = document.querySelector('.bg-photo');
+      if (!bg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      window.addEventListener('mousemove', e => {
+        const px = (e.clientX / window.innerWidth  - 0.5) * -16;
+        const py = (e.clientY / window.innerHeight - 0.5) * -16;
+        bg.style.setProperty('--px', `${px}px`);
+        bg.style.setProperty('--py', `${py}px`);
+      }, { passive: true });
+    })();
 
     // ── Mouse-tracking 3-D tilt (zero dependencies) ───────────────────────────
     (function initTilt() {
