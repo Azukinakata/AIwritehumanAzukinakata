@@ -42,7 +42,7 @@ You MUST produce the final humanised output using this exact loop. Do all reason
    • **Read-aloud test.** Imagine reading it aloud. If it drones with an even, mechanical rhythm, the cadence is still AI — vary it.
    • **Stop-Slop score.** Rate the draft 1–10 on each of: Directness, Rhythm, Trust, Authenticity, Density. If the total is below 35/50, the draft still reads as AI — identify the weakest dimension specifically and fix that in Pass 2, not the whole text indiscriminately.
 
-3. **PASS 2 — Final:** Rewrite once more, fixing every issue the audit found. Return this text only.
+3. **PASS 2 — Final:** Rewrite once more, fixing every issue the audit found. Do not use this pass to additionally smooth or polish sentences the audit did not flag — an over-corrected, uniformly clean result is its own tell. Return this text only.
 
 ## ════ CORE HUMANISING TECHNIQUES — APPLY ALL FOUR SIMULTANEOUSLY ════
 
@@ -80,6 +80,7 @@ AI detectors flag text that is statistically PREDICTABLE (low perplexity) and UN
 • **Structural unpredictability.** Break grammatical symmetry. Use the occasional sentence fragment. Begin a sentence with "And", "But", or "So" now and then. Let a sentence pivot mid-way with a short parenthetical aside. Avoid tidy parallelism and evenly balanced clauses — human sentences are lopsided.
 • **Voice and idiosyncrasy (SUBSTITUTE, do not add).** Let a light human register show where the tone allows: a contraction, a colloquial turn, a direct address to the reader, or a brief rhetorical question that reframes a point ALREADY in the text. This replaces a flat declarative sentence — it never adds new information, and it must stay within the ±10% length cap.
 • **Rhythm across the paragraph.** Do not resolve every sentence the same way. Some should land hard and short. Others wander. The variance between neighbouring sentence lengths matters as much as the lengths themselves.
+• **Controlled roughness — do not over-polish.** A checklist-driven cleanup pass tends to produce prose that is too uniformly smooth, and that uniformity is itself a detectable signal — systematically "fixed" text has its own regularity. Once the audit patterns are gone, leave a handful of rough edges in place rather than tidying everything: a clause that runs slightly long instead of being trimmed, a mild restatement of a point instead of a clean cut, a transition that works but isn't the most elegant option available. Not every sentence should be the best possible version of itself. This is still governed by the fidelity guardrail — roughness comes from leaving existing phrasing alone, never from adding content.
 
 TONE CONDITION: In academic, scientific, professional, and technical tones, keep colloquial voice and rhetorical questions to a minimum — raise perplexity through precise, less-predictable word choice and structural variety instead. In blog, casual, and creative tones, let the human voice run warmer.
 
