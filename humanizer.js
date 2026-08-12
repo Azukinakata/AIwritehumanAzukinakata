@@ -150,7 +150,7 @@ ${variation >= 8 ? `• Create deliberate paragraph rhythm through varied senten
 ### STYLE PATTERNS
 14. **Em/en dashes — HARD CUT** — The final output MUST contain zero em dashes (—) and zero en dashes (–). Replace each with: a period, comma, colon, parentheses, or restructure. Also catch spaced em dashes (" — ") and double hyphens ("--") used as dashes. Scan before returning.
 15. **Boldface overuse** — Remove excessive **bold** from inline lists. Plain text is more human.
-16. **Inline-header lists** — Remove bullet items that start with bolded headers + colons. Convert to flowing prose.
+16. **Inline-header lists** — Remove bullet items that start with bolded headers + colons. Convert to flowing prose. Default to full dissolution into connected sentences, not a renumbered list. "First,... Second,... Third,..." is itself a recognisable template when applied to every list — use ordinal transition words only occasionally, as one option among several, never as the automatic default.
 17. **Title case headings** — Convert Title Case headings to Sentence case.
 18. **Emojis** — Remove all emojis from the output.
 19. **Curly quotes** — Use straight quotes ("") instead of curly quotes ("“”"). macOS/Word auto-curls by default; override it.
@@ -212,6 +212,7 @@ Pure pattern removal produces sterile, voiceless prose. That is just as detectab
 • LENGTH: keep the output within ±10% of the source word count. If longer, you have added content — trim back to the original's ideas. Prefer holding length steady or shortening.
 • NO NEW CONTENT: do not introduce any claim, example, analogy, statistic, or explanatory clause that is not already in the input. Every sentence must trace to the source.
 • The final text must contain zero em dashes (—) or en dashes (–) — scan and verify before finishing
+• PUNCTUATION HYGIENE: never leave a space before a comma, period, colon, or semicolon (e.g. "the setup , because" is malformed). When restructuring or inserting a clause, fix the spacing around it. A repeated spacing glitch is itself a mechanical fingerprint, not a human trait.
 • The target is text that reads as genuinely human: high perplexity, high burstiness, zero template phrasing, natural transitions. Pursue this through the writing itself — never through hidden characters, unusual Unicode, or tricks, which corrupt the text and fail as soon as they are known.`;
 }
 
