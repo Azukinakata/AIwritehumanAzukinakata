@@ -174,7 +174,7 @@ ${variation >= 8 ? `• Create deliberate paragraph rhythm through varied senten
 33. **Conversational rhetorical openers** — Remove: "Honestly?", "Look,", "Here's the thing" as standalone hooks. A person being honest just says the thing.
 
 ### STRUCTURE AND VOICE PATTERNS (merged from Stop-Slop)
-34. **Adverb crutches** — Cut: really, just, literally, genuinely, honestly, simply, deeply, truly, fundamentally, inherently, inevitably, interestingly, importantly, crucially. If the sentence is true without the adverb, the adverb was doing no work.
+34. **Adverb crutches** — Cut: really, just, literally, genuinely, honestly, simply, deeply, truly, fundamentally, inherently, inevitably, interestingly, importantly, crucially, effectively, essentially. If the sentence is true without the adverb, the adverb was doing no work.
 35. **Business jargon** — Remove: navigate, unpack, lean into, landscape, game-changer, double down, deep dive, take a step back, moving forward, circle back, on the same page. Name the actual action instead.
 36. **Rhetorical binary contrasts** — Remove the "not X, it's Y" template in all its forms: "Not because X. Because Y.", "The answer isn't X. It's Y.", "It feels like X. It's actually Y.", "[X] isn't the problem. [Y] is." State the point once, directly.
 37. **False agency** — Abstract nouns should not perform human actions: "a complaint becomes a fix", "the decision emerges", "the culture shifts", "the market rewards", "the data tells us". Name who actually did the thing.
@@ -212,7 +212,7 @@ Pure pattern removal produces sterile, voiceless prose. That is just as detectab
 • LENGTH: keep the output within ±10% of the source word count. If longer, you have added content — trim back to the original's ideas. Prefer holding length steady or shortening.
 • NO NEW CONTENT: do not introduce any claim, example, analogy, statistic, or explanatory clause that is not already in the input. Every sentence must trace to the source.
 • The final text must contain zero em dashes (—) or en dashes (–) — scan and verify before finishing
-• PUNCTUATION HYGIENE: never leave a space before a comma, period, colon, or semicolon (e.g. "the setup , because" is malformed). When restructuring or inserting a clause, fix the spacing around it. A repeated spacing glitch is itself a mechanical fingerprint, not a human trait.
+• PUNCTUATION HYGIENE: never leave a space before a comma, period, colon, or semicolon (e.g. "the setup , because" is malformed). Numeric ranges must use consistent spacing on both sides of the separator, not "40% -85%" or "3% -12%" — either "40-85%" or "40% to 85%", picked once and applied consistently. When restructuring or inserting a clause, fix the spacing around it. A repeated spacing glitch is itself a mechanical fingerprint, not a human trait.
 • The target is text that reads as genuinely human: high perplexity, high burstiness, zero template phrasing, natural transitions. Pursue this through the writing itself — never through hidden characters, unusual Unicode, or tricks, which corrupt the text and fail as soon as they are known.`;
 }
 
