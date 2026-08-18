@@ -48,6 +48,33 @@ function verifyWebhookSignature(rawBody, signatureHeader) {
   }
 }
 
+// ── Read-only health check: does PADDLE_API_KEY actually authenticate? ────────
+// Never returns the key itself — just enough to tell a valid live key from a
+// missing/wrong-environment/mistyped one without guessing via the dashboard.
+async function checkApiKeyHealth() {
+  const key = PADDLE_API_KEY || '';
+  const keyPrefix = key.startsWith('live_') ? 'live'
+    : key.startsWith('test_') ? 'test'
+    : (key ? 'unrecognized-prefix' : 'missing');
+  if (!key) return { ok: false, keyPrefix, keyLength: 0 };
+
+  try {
+    const res = await fetch(`${PADDLE_API_BASE}/event-types`, {
+      headers: { Authorization: `Bearer ${key}` },
+    });
+    const body = await res.json().catch(() => null);
+    return {
+      ok: res.ok,
+      httpStatus: res.status,
+      keyPrefix,
+      keyLength: key.length,
+      paddleError: res.ok ? undefined : (body?.error?.code || body?.error?.type || 'unknown'),
+    };
+  } catch (err) {
+    return { ok: false, keyPrefix, keyLength: key.length, exception: err.message };
+  }
+}
+
 // ── Cancel a Paddle subscription at the end of the current period ─────────────
 async function cancelSubscription(paddleSubscriptionId) {
   return paddleRequest('POST', `/subscriptions/${paddleSubscriptionId}/cancel`, {
@@ -67,6 +94,7 @@ async function fetchPaddleIPs() {
 module.exports = {
   verifyWebhookSignature,
   cancelSubscription,
+  checkApiKeyHealth,
   paddleRequest,
   fetchPaddleIPs,
 };

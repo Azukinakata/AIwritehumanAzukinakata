@@ -9,8 +9,11 @@ const {
   enforcePlan, recordUsage, countWords, authenticateUser, PLAN_LIMITS,
 } = require('./planEnforcement');
 const {
-  verifyWebhookSignature, cancelSubscription, fetchPaddleIPs,
+  verifyWebhookSignature, cancelSubscription, fetchPaddleIPs, checkApiKeyHealth,
 } = require('./paddleService');
+const { sendPasswordResetEmail } = require('./emailService');
+
+const SITE_URL = process.env.SITE_URL || 'https://aiwritehuman.com';
 
 const app  = express();
 const PORT = process.env.PORT || 5500;
@@ -196,6 +199,54 @@ app.post('/api/signup', async (req, res) => {
   }
 
   res.json({ ok: true, userId: data?.user?.id });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// POST /api/request-password-reset — email a recovery link.
+// Supabase's own mailer is unreliable here (same root cause as the signup fix
+// above), so the recovery link is generated server-side via the admin API (this
+// step alone never sends mail) and delivered ourselves through Resend. Always
+// responds ok:true regardless of outcome so the endpoint can't be used to check
+// which emails have accounts.
+// ═══════════════════════════════════════════════════════════════════════════════
+const resetRequestedAt = new Map(); // email -> last request timestamp, throttles repeat sends
+app.post('/api/request-password-reset', async (req, res) => {
+  const email = (req.body?.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+
+  const last = resetRequestedAt.get(email);
+  if (last && Date.now() - last < 60_000) return res.json({ ok: true });
+  resetRequestedAt.set(email, Date.now());
+
+  try {
+    const { data, error } = await supabase.auth.admin.generateLink({
+      type: 'recovery',
+      email,
+      options: { redirectTo: SITE_URL },
+    });
+    if (!error && data?.properties?.action_link) {
+      await sendPasswordResetEmail(email, data.properties.action_link);
+    }
+    // Any error (e.g. no account for this email) is swallowed on purpose.
+  } catch (err) {
+    console.error('[password-reset] Failed:', err.message);
+  }
+
+  res.json({ ok: true });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GET /api/admin/paddle-check — read-only diagnostic: does the deployed
+// PADDLE_API_KEY actually authenticate against Paddle's live API? Gated behind
+// the existing webhook secret (already configured in Render) since it exposes
+// no secret values, only pass/fail + key shape.
+// ═══════════════════════════════════════════════════════════════════════════════
+app.get('/api/admin/paddle-check', async (req, res) => {
+  const expected = process.env.PADDLE_WEBHOOK_SECRET;
+  if (!expected || req.headers['x-admin-token'] !== expected) return res.status(404).end();
+  res.json(await checkApiKeyHealth());
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
