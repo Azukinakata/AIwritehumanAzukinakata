@@ -9,11 +9,33 @@ const {
   enforcePlan, recordUsage, countWords, authenticateUser, PLAN_LIMITS,
 } = require('./planEnforcement');
 const {
-  verifyWebhookSignature, cancelSubscription,
+  verifyWebhookSignature, cancelSubscription, fetchPaddleIPs,
 } = require('./paddleService');
 
 const app  = express();
 const PORT = process.env.PORT || 5500;
+
+// Render sits behind a proxy — without this, req.ip is the proxy's address,
+// not the real caller, which would break the Paddle webhook IP allowlist below.
+app.set('trust proxy', true);
+
+// ── Paddle webhook IP allowlist ────────────────────────────────────────────────
+// Source of truth is https://api.paddle.com/ips (not hard-coded); refreshed
+// periodically since Paddle can change these addresses.
+let paddleIpAllowlist = new Set();
+async function refreshPaddleIpAllowlist() {
+  try {
+    const cidrs = await fetchPaddleIPs();
+    const ips = cidrs.map(c => c.split('/')[0]);
+    const nonHostCidr = cidrs.find(c => !c.endsWith('/32'));
+    if (nonHostCidr) console.warn('[paddle-ips] Unexpected non-/32 CIDR from Paddle:', nonHostCidr);
+    if (ips.length) paddleIpAllowlist = new Set(ips);
+  } catch (err) {
+    console.error('[paddle-ips] Failed to refresh allowlist, keeping previous list:', err.message);
+  }
+}
+refreshPaddleIpAllowlist();
+setInterval(refreshPaddleIpAllowlist, 6 * 60 * 60 * 1000); // every 6 hours
 
 // Price-ID → plan mapping, read from env so sandbox/live can differ without code changes
 const PADDLE_PRICE_IDS = {
@@ -294,6 +316,11 @@ app.delete('/api/subscribe', async (req, res) => {
 //          subscription.canceled, transaction.completed, transaction.payment_failed
 // ═══════════════════════════════════════════════════════════════════════════════
 app.post('/api/webhooks/paddle', async (req, res) => {
+  if (paddleIpAllowlist.size > 0 && !paddleIpAllowlist.has(req.ip)) {
+    console.warn('[paddle-webhook] Rejected delivery from non-Paddle IP:', req.ip);
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   const sig = req.headers['paddle-signature'] || '';
 
   if (!verifyWebhookSignature(req.rawBody || JSON.stringify(req.body), sig)) {
