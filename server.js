@@ -250,6 +250,19 @@ app.get('/api/admin/paddle-check', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// GET /api/admin/webhook-log — last 20 Paddle webhook delivery attempts this
+// process has seen (IP-block / bad-signature / accepted), so the live webhook
+// secret can be checked without Render log access. Gated the same way as
+// paddle-check. Resets on every deploy/restart, so it only shows attempts
+// since the last one.
+// ═══════════════════════════════════════════════════════════════════════════════
+app.get('/api/admin/webhook-log', (req, res) => {
+  const expected = process.env.PADDLE_WEBHOOK_SECRET;
+  if (!expected || req.headers['x-admin-token'] !== expected) return res.status(404).end();
+  res.json({ count: webhookLog.length, attempts: webhookLog });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // GET /api/plans  — list all available plans (public, used by pricing modal)
 // ═══════════════════════════════════════════════════════════════════════════════
 app.get('/api/plans', async (_req, res) => {
@@ -366,9 +379,18 @@ app.delete('/api/subscribe', async (req, res) => {
 // Handles: subscription.activated, subscription.updated,
 //          subscription.canceled, transaction.completed, transaction.payment_failed
 // ═══════════════════════════════════════════════════════════════════════════════
+// Last 20 delivery attempts, kept in memory so live/webhook status can be
+// checked from outside without Render log access — see /api/admin/webhook-log.
+const webhookLog = [];
+function logWebhookAttempt(entry) {
+  webhookLog.unshift({ at: new Date().toISOString(), ...entry });
+  webhookLog.length = Math.min(webhookLog.length, 20);
+}
+
 app.post('/api/webhooks/paddle', async (req, res) => {
   if (paddleIpAllowlist.size > 0 && !paddleIpAllowlist.has(req.ip)) {
     console.warn('[paddle-webhook] Rejected delivery from non-Paddle IP:', req.ip);
+    logWebhookAttempt({ ok: false, reason: 'non-paddle-ip', ip: req.ip });
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -376,11 +398,13 @@ app.post('/api/webhooks/paddle', async (req, res) => {
 
   if (!verifyWebhookSignature(req.rawBody || JSON.stringify(req.body), sig)) {
     console.warn('[paddle-webhook] Invalid signature — rejected');
+    logWebhookAttempt({ ok: false, reason: 'invalid-signature', hadSignatureHeader: !!sig });
     return res.status(401).json({ error: 'Invalid signature' });
   }
 
   const { event_type, data } = req.body || {};
   console.log('[paddle-webhook]', event_type, data?.id);
+  logWebhookAttempt({ ok: true, eventType: event_type, dataId: data?.id });
 
   // Helper: look up Supabase user from Paddle customer_id or custom_data.userId
   async function resolveUserId() {
