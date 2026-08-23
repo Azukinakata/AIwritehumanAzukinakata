@@ -1683,13 +1683,9 @@
     function openPrivacyModal() { $('privacyModal').classList.add('open'); }
     function closePrivacyModal(){ $('privacyModal').classList.remove('open'); }
 
-    // Deep links: visiting /terms, /privacy or /refund directly opens the policy
-    (function openModalFromPath() {
-      const p = window.location.pathname.replace(/\/+$/, '').toLowerCase();
-      if (p === '/terms')   openTermsModal();
-      else if (p === '/privacy') openPrivacyModal();
-      else if (p === '/refund')  openRefundModal();
-    })();
+    // Deep-link routing (title/description/canonical + pushState) is handled
+    // by the legaldeeplink.js block near the end of </body>, after this
+    // script defines openTermsModal/openPrivacyModal/openRefundModal above.
 
     function handleSubscribe(planId) {
       if (!getToken()) { closePricingModal(); openAuthModal(); return; }
@@ -2072,6 +2068,145 @@
         el.addEventListener('mouseleave', () => {
           el.style.transition = 'transform 0.45s cubic-bezier(0.25,1,0.5,1), box-shadow 0.25s ease';
           el.style.transform  = 'perspective(1100px) rotateX(0deg) rotateY(0deg) scale(1)';
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    /* ------------------------------------------------------------------
+       AIwritehuman — legal route deep-linking
+       Gives /terms, /privacy and /refund their own title, description and
+       canonical instead of all three resolving as duplicate-content copies
+       of the homepage, and makes the footer links produce real, shareable
+       URLs (pushState) with working back/forward.
+    ------------------------------------------------------------------- */
+    (function () {
+      'use strict';
+
+      var ROUTES = {
+        '/terms': {
+          open: 'openTermsModal',
+          title: 'Terms of Service — AIwritehuman',
+          desc: 'The terms governing use of AIwritehuman, including subscriptions, acceptable use, and account termination.'
+        },
+        '/privacy': {
+          open: 'openPrivacyModal',
+          title: 'Privacy Policy — AIwritehuman',
+          desc: 'How AIwritehuman collects, stores and processes your text and account data, and the rights you have over it.'
+        },
+        '/refund': {
+          open: 'openRefundModal',
+          title: 'Refund Policy — AIwritehuman',
+          desc: 'Refund eligibility, timeframes and how to request a refund for an AIwritehuman subscription.'
+        }
+      };
+
+      var HOME = {
+        title: document.title,
+        desc: (document.querySelector('meta[name="description"]') || {}).content || '',
+        canonical: 'https://aiwritehuman.com/'
+      };
+
+      function setMeta(name, value) {
+        var el = document.querySelector('meta[name="' + name + '"]');
+        if (!el) {
+          el = document.createElement('meta');
+          el.setAttribute('name', name);
+          document.head.appendChild(el);
+        }
+        el.setAttribute('content', value);
+      }
+
+      function setCanonical(href) {
+        var el = document.querySelector('link[rel="canonical"]');
+        if (!el) {
+          el = document.createElement('link');
+          el.setAttribute('rel', 'canonical');
+          document.head.appendChild(el);
+        }
+        el.setAttribute('href', href);
+      }
+
+      function normalise(path) {
+        // tolerate trailing slashes: /privacy/ -> /privacy
+        return path.length > 1 ? path.replace(/\/+$/, '') : path;
+      }
+
+      // --- Head rewrite runs immediately, before first paint ---------------
+      function applyHead(path) {
+        var route = ROUTES[normalise(path)];
+        if (route) {
+          document.title = route.title;
+          setMeta('description', route.desc);
+          setCanonical('https://aiwritehuman.com' + normalise(path));
+        } else {
+          document.title = HOME.title;
+          setMeta('description', HOME.desc);
+          setCanonical(HOME.canonical);
+        }
+      }
+
+      applyHead(location.pathname);
+
+      // --- Open the matching modal once the DOM (and its openers) exist ----
+      function applyModal(path) {
+        var route = ROUTES[normalise(path)];
+        if (!route) return;
+        var fn = window[route.open];
+        if (typeof fn === 'function') fn();
+      }
+
+      function onReady(cb) {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', cb);
+        } else {
+          cb();
+        }
+      }
+
+      onReady(function () {
+        applyModal(location.pathname);
+
+        // Footer links: keep the modal behaviour but put a real URL in the bar,
+        // so the page is shareable and the back button works.
+        Object.keys(ROUTES).forEach(function (path) {
+          var links = document.querySelectorAll('a[href="' + path + '"]');
+          Array.prototype.forEach.call(links, function (a) {
+            a.addEventListener('click', function (e) {
+              // let ctrl/cmd/middle-click open a real new tab
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+              e.preventDefault();
+              history.pushState({ legal: path }, '', path);
+              applyHead(path);
+              applyModal(path);
+            });
+          });
+        });
+
+        // Back/forward between a legal URL and the homepage.
+        window.addEventListener('popstate', function () {
+          Object.keys(ROUTES).forEach(function (p) {
+            var close = window[ROUTES[p].open.replace('open', 'close')];
+            if (typeof close === 'function') close();
+          });
+          applyHead(location.pathname);
+          applyModal(location.pathname);
+        });
+
+        // When a modal is dismissed while sitting on its own URL, return to "/".
+        Object.keys(ROUTES).forEach(function (path) {
+          var name = ROUTES[path].open.replace('open', 'close');
+          var original = window[name];
+          if (typeof original !== 'function') return;
+          window[name] = function () {
+            var result = original.apply(this, arguments);
+            if (normalise(location.pathname) === path) {
+              history.pushState({}, '', '/');
+              applyHead('/');
+            }
+            return result;
+          };
         });
       });
     })();
