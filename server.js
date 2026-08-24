@@ -72,12 +72,15 @@ app.use((_req, res, next) => {
 
 // Block direct requests to server-side source files
 app.use((req, res, next) => {
-  const blocked = ['.env', 'server.js', 'supabaseClient.js', 'paddleService.js',
+  const blocked = ['.env', '.env.local', 'server.js', 'supabaseClient.js', 'paddleService.js',
                    'planEnforcement.js', 'humanizer.js', 'writehumanDetectorService.js',
-                   'package.json'];
+                   'emailService.js', 'stitchService.js', 'package.json', 'package-lock.json',
+                   'README.md', '.gitignore'];
   const name = path.basename(req.path);
   if (blocked.includes(name) || req.path.startsWith('/supabase/') || req.path.startsWith('/node_modules/')
-      || req.path.startsWith('/writehuman-detector/') || req.path.startsWith('/writehuman-detector-bridge/')) {
+      || req.path.startsWith('/writehuman-detector/') || req.path.startsWith('/writehuman-detector-bridge/')
+      || req.path.startsWith('/scripts/') || req.path.startsWith('/.backups/')
+      || req.path.startsWith('/.git')) {
     return res.status(404).end();
   }
   next();
