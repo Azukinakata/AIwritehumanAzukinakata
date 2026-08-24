@@ -12,6 +12,7 @@ const {
   verifyWebhookSignature, cancelSubscription, fetchPaddleIPs, checkApiKeyHealth,
 } = require('./paddleService');
 const { sendPasswordResetEmail } = require('./emailService');
+const writehumanDetector = require('./writehumanDetectorService');
 
 const SITE_URL = process.env.SITE_URL || 'https://aiwritehuman.com';
 
@@ -72,9 +73,11 @@ app.use((_req, res, next) => {
 // Block direct requests to server-side source files
 app.use((req, res, next) => {
   const blocked = ['.env', 'server.js', 'supabaseClient.js', 'paddleService.js',
-                   'planEnforcement.js', 'humanizer.js', 'package.json'];
+                   'planEnforcement.js', 'humanizer.js', 'writehumanDetectorService.js',
+                   'package.json'];
   const name = path.basename(req.path);
-  if (blocked.includes(name) || req.path.startsWith('/supabase/') || req.path.startsWith('/node_modules/')) {
+  if (blocked.includes(name) || req.path.startsWith('/supabase/') || req.path.startsWith('/node_modules/')
+      || req.path.startsWith('/writehuman-detector/') || req.path.startsWith('/writehuman-detector-bridge/')) {
     return res.status(404).end();
   }
   next();
@@ -90,6 +93,9 @@ app.get('/api/config', (_req, res) => {
     paddleClientToken: process.env.PADDLE_CLIENT_TOKEN || '',
     paddlePriceIds:   PADDLE_PRICE_IDS,
     aiDetectionEnabled: !!process.env.WINSTON_API_KEY,
+    // Honesty flag: true only when a detection endpoint is actually configured.
+    // The frontend must use this to decide whether to offer the feature at all.
+    plagiarismDetectionEnabled: writehumanDetector.isConfigured(),
   });
 });
 
@@ -332,6 +338,61 @@ app.post('/api/detect', async (req, res) => {
   } catch (err) {
     console.error('[detect] error:', err.message);
     res.status(502).json({ error: 'Detection failed. Please try again.' });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// POST /api/detect-plagiarism — similarity checking via writehuman-detector.
+// REAL IMPLEMENTATION: drives the Turnitin PHP SDK vendored unmodified in
+// writehuman-detector/ (upstream: github.com/turnitin/moodle-plagiarism_turnitin,
+// GPL-3.0 — see writehuman-detector/PROVENANCE.md) through the PHP bridge in
+// writehuman-detector-bridge/.
+// Honest by design: returns 503 when Turnitin credentials are not configured
+// (a valid Turnitin account + integration agreement is required), returns the
+// submission id while the report generates, and NEVER fabricates a score.
+// ═══════════════════════════════════════════════════════════════════════════════
+app.post('/api/detect-plagiarism', async (req, res) => {
+  try {
+    await authenticateUser(req); // gate behind login to protect the paid APIs
+  } catch (err) {
+    return res.status(err.status || 401).json({ error: err.message, code: err.code });
+  }
+
+  if (!writehumanDetector.isConfigured()) {
+    return res.status(503).json({
+      error: 'Plagiarism detection is not configured yet.',
+    });
+  }
+
+  try {
+    const result = await writehumanDetector.submit(req.body?.text || '');
+    res.json(result);
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message, code: err.code });
+    console.error('[detect-plagiarism] error:', err.message);
+    res.status(502).json({ error: 'Detection failed. Please try again.' });
+  }
+});
+
+// ── GET /api/detect-plagiarism/report/:submissionId — poll for the report ───
+app.get('/api/detect-plagiarism/report/:submissionId', async (req, res) => {
+  try {
+    await authenticateUser(req);
+  } catch (err) {
+    return res.status(err.status || 401).json({ error: err.message, code: err.code });
+  }
+
+  if (!writehumanDetector.isConfigured()) {
+    return res.status(503).json({ error: 'Plagiarism detection is not configured yet.' });
+  }
+
+  try {
+    const result = await writehumanDetector.report(req.params.submissionId);
+    res.json(result);
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message, code: err.code });
+    console.error('[detect-plagiarism-report] error:', err.message);
+    res.status(502).json({ error: 'Could not fetch the report. Please try again.' });
   }
 });
 

@@ -18,6 +18,12 @@ test_key.js
 # Tooling cache
 .impeccable/
 
+# Local backups (pre-change snapshots)
+.backups/
+
+# writehuman-detector bridge runtime state (class/assignment cache)
+writehuman-detector-bridge/state.json
+
 # OS
 .DS_Store
 Thumbs.db
