@@ -8,7 +8,7 @@ Live: **https://aiwritehuman.com**
 
 The product is a two-pass humanisation engine driven by Claude, governed by a detailed system prompt built on the **August 2026 revision of Wikipedia's "Signs of AI writing" field guide** (WP:AISIGNS), merged with the Stop-Slop pattern catalog and academic-humanizer rules.
 
-- **54 pattern classes** are audited and removed: significance inflation, canned notability claims, superficial `-ing` analyses, AI vocabulary (with per-model-era word lists), copula avoidance, negative parallelisms, rule-of-three, em-dash overuse, model-internal citation artifacts, placeholder residue, and more.
+- **55 pattern classes** are audited and removed: significance inflation, canned notability claims, superficial `-ing` analyses, AI vocabulary (with per-model-era word lists), copula avoidance, negative parallelisms, rule-of-three, em-dash overuse, model-internal citation artifacts, placeholder residue, canned bio/profile structure, and more.
 - **Draft → measured audit → final** loop, including a detector-perspective pass that re-reads the draft the way an AI detector would.
 - **Fidelity guardrail**: output stays within ±10% of the source length and every claim must trace to the input. The engine restructures — it never invents facts.
 - **Voice calibration**: optional writing samples let the output match a specific person's style.
