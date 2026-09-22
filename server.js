@@ -629,7 +629,7 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
   });
 
   const payload = JSON.stringify({
-    model:      'claude-fable-5',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 8192,
     stream:     true,
     fallbacks:  [{ model: 'claude-opus-4-8' }],
