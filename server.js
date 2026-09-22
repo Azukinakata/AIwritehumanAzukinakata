@@ -632,7 +632,6 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
     model:      'claude-haiku-4-5',
     max_tokens: 8192,
     stream:     true,
-    fallbacks:  [{ model: 'claude-sonnet-5' }],
     system:     systemPrompt,
     messages:   [{ role: 'user', content: text }],
   });
@@ -659,7 +658,6 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
       headers: {
         'x-api-key':         ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01',
-        'anthropic-beta':    'server-side-fallback-2026-06-01',
         'content-type':      'application/json',
         'content-length':    Buffer.byteLength(payload),
       },
