@@ -13,6 +13,7 @@ const {
 } = require('./paddleService');
 const { sendPasswordResetEmail } = require('./emailService');
 const writehumanDetector = require('./writehumanDetectorService');
+const { askTypeSafe } = require('./typesafe');
 
 const SITE_URL = process.env.SITE_URL || 'https://aiwritehuman.com';
 
@@ -626,13 +627,45 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
     variation:    Number(variation)  || 8,
     voiceSample:  voiceSample || '',
     language:     language === 'zh' ? 'zh' : 'en',
-  });
+  }); // { static, dynamic } — static is byte-identical across every request
+      // in the same language (tone/intensity/voice all live in dynamic), so
+      // it caches across different users' calls, not just within one user's
+      // session. See humanizer.js for why it's split this way.
+
+  // ── TypeSafe pre-generation routing signal (observe-only) ─────────────────
+  // Fired here, but NOT awaited — it runs concurrently with the Anthropic
+  // request below and adds zero latency to the stream the customer is
+  // waiting on. Diagnostic only for now: logs what the model tier WOULD be
+  // routed to, so we have a real distribution of difficulty before actually
+  // switching which model gets called for "routine" text.
+  askTypeSafe(
+    { text, selectedTone: selectedTone || 'academic' },
+    {
+      difficulty: {
+        type: 'score',
+        instructions: 'How much rewriting judgment does this text require to humanise convincingly?',
+        criteria: ['Routine prose', 'Moderate', 'Dense technical or heavily stylised'],
+      },
+    }
+  ).then((answers) => {
+    if (!answers) return;
+    console.log(`[typesafe] humanize pre-check — difficulty=${answers.difficulty?.score}/2 (conf=${answers.difficulty?.confidence})`);
+  }).catch((err) => console.warn('[typesafe] pre-check failed:', err?.message || err));
 
   const payload = JSON.stringify({
     model:      'claude-haiku-4-5',
     max_tokens: 8192,
     stream:     true,
-    system:     systemPrompt,
+    // Two content blocks: the ~9.4k-token static instruction set is cached
+    // and re-read across every humanize call (any tone, any user); the
+    // per-request tone/intensity/voice settings follow it uncached. 1h TTL
+    // because this is shared across concurrent users' requests, not just one
+    // user's session — a wider reuse window than the 5-minute default earns
+    // back the higher per-write cost on all but very quiet traffic periods.
+    system: [
+      { type: 'text', text: systemPrompt.static, cache_control: { type: 'ephemeral', ttl: '1h' } },
+      { type: 'text', text: systemPrompt.dynamic },
+    ],
     messages:   [{ role: 'user', content: text }],
   });
 
@@ -695,6 +728,35 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
           promptHash,
           success:        streamOk && fullText.length > 0,
         });
+
+        // ── TypeSafe post-generation gate (observe-only) ────────────────────
+        // Fired after the response is already sent — never adds latency to
+        // what the customer is waiting on. Fails soft if the key is unset,
+        // the call errors, or it times out. Logged only for now, not
+        // enforced; once the signal is trusted on real traffic this can gate
+        // a re-run or flag a result before it reaches the customer.
+        if (streamOk && fullText.length > 0) {
+          askTypeSafe(
+            { sourceText: text.slice(0, 20000), humanizedText: fullText.slice(0, 20000) },
+            {
+              meaning_preserved: {
+                type: 'noul',
+                instructions: 'Does the rewritten text preserve every factual claim made in the source text, without adding or dropping meaning?',
+              },
+              still_reads_ai: {
+                type: 'score',
+                instructions: 'How AI-generated does the rewritten text still read to an attentive human reader?',
+                criteria: ['Reads human', 'Somewhat detectable', 'Strongly reads AI-generated'],
+              },
+            }
+          ).then((answers) => {
+            if (!answers) return;
+            console.log(
+              `[typesafe] humanize post-check — meaning_preserved=${answers.meaning_preserved?.noul} ` +
+              `still_reads_ai=${answers.still_reads_ai?.score}/2 (conf=${answers.still_reads_ai?.confidence})`
+            );
+          }).catch((err) => console.warn('[typesafe] post-check failed:', err?.message || err));
+        }
       });
     },
   );
