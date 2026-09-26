@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIwritehuman — AI Text Humanizer | Make AI Writing Sound Human</title>
-  <meta name="description" content="AIwritehuman rewrites AI-generated drafts into natural, on-brand writing. A 54-pattern two-pass audit smooths tone, phrasing, and voice for marketers, writers, and professionals. Free to try, plans from $12/mo.">
+  <title>AIwritehuman — AI Humanizer & AI Detector for Business Writing</title>
+  <meta name="description" content="Humanize AI text with AIwritehuman's AI humanizer, built for B2B and professional writing. Two-pass 54-pattern audit smooths tone and phrasing. Free to try, plans from $12/mo.">
   <link rel="canonical" href="https://aiwritehuman.com/">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <meta name="google-site-verification" content="_LzzhGgUh-gRtHqYVc6m2Qx1273timCyOMy2Vh-z0Hk">
@@ -884,7 +884,7 @@
         </div>
       </div>
 
-      <h1 class="hero-title">Make AI Text Sound <span class="hl">Human</span></h1>
+      <h1 class="hero-title">Humanize AI Text for <span class="hl">Business Writing</span></h1>
       <p class="hero-sub">Trusted by marketing teams and professionals to reshape AI drafts into natural, on-brand copy that sounds exactly the way you want.</p>
 
       <div class="badges">
@@ -1174,6 +1174,8 @@
         <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="/refund" onclick="event.preventDefault(); openRefundModal();">Refund Policy</a>
         <span class="footer-dot">&middot;</span>
+        <a class="footer-link" href="/blog/what-is-an-ai-humanizer" onclick="event.preventDefault(); openBlogHumanizerModal();">Blog</a>
+        <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="mailto:thapelo@aiwritehuman.com">Contact &amp; Enquiries</a>
         <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="mailto:thapelo@aiwritehuman.com">thapelo@aiwritehuman.com</a>
@@ -1326,6 +1328,32 @@
 
         <h4>Enquiries &amp; complaints</h4>
         <p>For any question, billing enquiry, or complaint, contact <a href="mailto:thapelo@aiwritehuman.com">thapelo@aiwritehuman.com</a> and we will assist you.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BLOG: WHAT IS AN AI HUMANIZER MODAL ────────────────── -->
+  <div class="modal-overlay" id="blogHumanizerModal" role="dialog" aria-modal="true" aria-label="What is an AI humanizer">
+    <div class="modal-box refund-box">
+      <button type="button" class="modal-close" onclick="closeBlogHumanizerModal()" aria-label="Close">&times;</button>
+      <div class="modal-title">What Is an AI Humanizer?</div>
+      <div class="modal-sub">AIwritehuman &mdash; Blog</div>
+      <div class="refund-body">
+        <p>An <strong>AI humanizer</strong> is a tool that rewrites text produced by ChatGPT, Claude, or another AI model so it reads the way a person would naturally write it &mdash; varied sentence rhythm, plainer phrasing, and a consistent voice &mdash; instead of the flatter, more repetitive patterns that AI drafts tend to fall into. The goal isn't to disguise where a draft started; it's to fix the tics that make AI writing sound like AI writing before it reaches a client, editor, or reader.</p>
+
+        <h4>Why AI-generated text gets flagged</h4>
+        <p>AI drafts share a recognisable set of habits: uniform sentence length, overused transition words, hedging phrases repeated in the same spots, and a tendency to restate the obvious. An <strong>AI detector</strong> looks for exactly this kind of statistical uniformity. You don't need a detector to notice it, though &mdash; most readers can feel that a paragraph was AI-written even when they can't say precisely why.</p>
+
+        <h4>How an AI humanizer works</h4>
+        <p>A good humanizer doesn't just swap synonyms. It has to vary sentence structure and length (what's sometimes called burstiness), remove filler and repeated hedges, and adjust tone and phrasing to match how a specific person or brand actually writes &mdash; all while preserving the original meaning. Do only the first part and the text still reads mechanically; skip the meaning-preservation step and you get output that drifts from what you actually said.</p>
+
+        <h4>AI humanizer vs AI detector</h4>
+        <p>These are different tools solving different problems. An AI detector scores a piece of text for how likely it is to be AI-generated. An AI humanizer edits the text itself. Running detector scores as a diagnostic is useful &mdash; it tells you whether a draft still reads as templated &mdash; but no legitimate humanizer can promise to defeat every detector, and one honest limit is worth stating plainly: if a draft still needs to disclose AI assistance under your organisation's policies, humanizing it doesn't change that obligation.</p>
+
+        <h4>What AIwritehuman does differently</h4>
+        <p>AIwritehuman runs a 54-pattern two-pass audit built specifically for business and professional writing: a first pass rewrites structure and phrasing, a second pass checks the result against the full pattern list and your chosen voice settings (tone, British English strength, academic hedging, sentence variation) before returning it. It's built for people who need AI-assisted drafts to read like their own writing &mdash; marketers, consultants, and professionals producing client-facing copy &mdash; not for evading academic-integrity checks.</p>
+
+        <p>Free to try, with plans from $12/mo. <a href="/">Try the humanizer</a>.</p>
       </div>
     </div>
   </div>
@@ -1671,6 +1699,8 @@
     function closeTermsModal()  { $('termsModal').classList.remove('open'); }
     function openPrivacyModal() { $('privacyModal').classList.add('open'); }
     function closePrivacyModal(){ $('privacyModal').classList.remove('open'); }
+    function openBlogHumanizerModal()  { $('blogHumanizerModal').classList.add('open'); }
+    function closeBlogHumanizerModal() { $('blogHumanizerModal').classList.remove('open'); }
 
     // Deep-link routing (title/description/canonical + pushState) is handled
     // by the legaldeeplink.js block near the end of </body>, after this
@@ -1717,6 +1747,7 @@
     $('refundModal').addEventListener('click', e => { if (e.target === $('refundModal')) closeRefundModal(); });
     $('termsModal').addEventListener('click', e => { if (e.target === $('termsModal')) closeTermsModal(); });
     $('privacyModal').addEventListener('click', e => { if (e.target === $('privacyModal')) closePrivacyModal(); });
+    $('blogHumanizerModal').addEventListener('click', e => { if (e.target === $('blogHumanizerModal')) closeBlogHumanizerModal(); });
 
     // ── Bootstrap auth on load ────────────────────────────────────────────────
     (async () => {
@@ -2088,6 +2119,11 @@
           open: 'openRefundModal',
           title: 'Refund Policy — AIwritehuman',
           desc: 'Refund eligibility, timeframes and how to request a refund for an AIwritehuman subscription.'
+        },
+        '/blog/what-is-an-ai-humanizer': {
+          open: 'openBlogHumanizerModal',
+          title: 'What Is an AI Humanizer? — AIwritehuman',
+          desc: 'What an AI humanizer does, how it differs from an AI detector, and how AIwritehuman\'s 54-pattern two-pass audit humanizes AI text for business writing.'
         }
       };
 
