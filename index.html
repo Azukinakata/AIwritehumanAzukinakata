@@ -616,6 +616,20 @@
     .pricing-subtitle { font-size: 0.9rem; color: var(--text-muted); }
     .pricing-section .pricing-grid { margin-top: 0; }
 
+    /* ── Crawlable content section ──────────────────────────── */
+    .content-section { padding: 34px 32px; margin-bottom: 18px; }
+    .content-section h2.pricing-title { text-align: center; margin-bottom: 20px; }
+    .content-section h3 {
+      font-size: 1.05rem; color: var(--text); margin: 26px 0 8px;
+    }
+    .content-section h3:first-of-type { margin-top: 0; }
+    .content-section p {
+      font-size: 0.92rem; color: var(--text-mid); line-height: 1.75; margin-bottom: 10px;
+    }
+    .content-section a { color: #bfdbfe; }
+    .content-section .faq-item { margin-bottom: 14px; }
+    .content-section .faq-item p { margin-bottom: 0; }
+
     /* ── How it works ───────────────────────────────────────── */
     .how { padding: 28px 32px; margin-bottom: 18px; }
     .how-title {
@@ -1164,6 +1178,31 @@
       </div>
     </section>
 
+    <section class="glass content-section" id="about">
+      <h2 class="pricing-title">What Is AIwritehuman?</h2>
+
+      <p>AIwritehuman is a text humanizer built for business and professional writing. Paste a draft that came out of ChatGPT, Claude, or another AI model, and AIwritehuman rewrites it through a two-pass, 54-pattern audit that fixes the tells of AI writing &mdash; repetitive sentence rhythm, overused transitions, generic hedging &mdash; while keeping your meaning, facts, and structure intact.</p>
+
+      <h3>How AIwritehuman Compares to ChatGPT, QuillBot, and Grammarly</h3>
+      <p>These tools solve different problems. ChatGPT and Claude produce a first draft quickly, but that draft usually keeps the statistical fingerprints &mdash; even sentence lengths, stock transition words, repeated hedges &mdash; that make AI writing recognisable. QuillBot paraphrases sentence by sentence, which varies wording but doesn't run a structured audit against a defined pattern list or check the result against your chosen tone and voice. Grammarly is built for grammar, clarity, and correctness, not for removing the rhythm and phrasing patterns that flag a draft as AI-written. AIwritehuman sits after all three: draft with an AI model, tidy grammar with Grammarly, finish with AIwritehuman so the result reads as your own writing.</p>
+
+      <h3>Use Cases: Blogs, Emails, Reports, and Marketing Copy</h3>
+      <p>Marketers use it to turn AI-assisted first drafts into blog posts and campaign copy that match a brand's voice. Consultants and analysts use it for client-facing reports where a templated AI tone undermines credibility. Professionals use it for emails and internal writing that need to read naturally without extra editing time. Anywhere an AI-assisted draft needs to become finished business writing, it fits.</p>
+
+      <h3>AI Humanizer and AI Detection, Built In</h3>
+      <p>The humanizer is the core tool &mdash; see how the 54-pattern two-pass audit works on the <a href="/ai-humanizer" onclick="event.preventDefault(); openAiHumanizerModal();">AI humanizer page</a>. AIwritehuman also includes AI Check, an AI-detection feature powered by Winston AI, so you can see an AI-probability score and sentence-level highlighting on a draft before you send it &mdash; more on the <a href="/ai-detector" onclick="event.preventDefault(); openAiDetectorModal();">AI detector page</a>. A detector check is a diagnostic, not a guarantee: no legitimate tool can promise to defeat every AI detector, and AIwritehuman doesn't claim to.</p>
+
+      <h3>Pricing and Trust</h3>
+      <p>AIwritehuman is free to try, with paid plans from $12/mo for higher word limits and monthly quotas &mdash; see pricing above. Every paid plan carries a 14-day, no-questions <a href="/refund" onclick="event.preventDefault(); openRefundModal();">money-back guarantee</a>. Text submitted for humanising is never stored &mdash; only a one-way hash is kept for abuse prevention, detailed in the <a href="/privacy" onclick="event.preventDefault(); openPrivacyModal();">privacy policy</a>. AIwritehuman is operated by WRITEHUMAN (Pty) Ltd, a registered South African company.</p>
+
+      <h3>Frequently Asked Questions</h3>
+      <div class="faq-item"><p><strong>Does AIwritehuman write content from scratch?</strong> No &mdash; it rewrites and humanizes text you already have, such as a ChatGPT or Claude draft. It doesn't generate new content from a topic or prompt.</p></div>
+      <div class="faq-item"><p><strong>Will humanized text always pass AI detectors?</strong> No tool can honestly guarantee that. AIwritehuman focuses on genuine naturalness and includes a built-in AI Check so you can see where a draft stands before you use it.</p></div>
+      <div class="faq-item"><p><strong>Is my text stored or used for training?</strong> No. Submitted text is sent to our AI provider to generate output and isn't retained afterwards; we keep only a one-way hash for abuse prevention.</p></div>
+      <div class="faq-item"><p><strong>What languages does AIwritehuman support?</strong> English and Chinese.</p></div>
+      <div class="faq-item"><p><strong>Can I cancel anytime?</strong> Yes, from the pricing panel. Your plan stays active until the end of the current billing period, and every paid plan is covered by the 14-day refund guarantee.</p></div>
+    </section>
+
     <footer>
       <div class="footer-links">
         <button type="button" class="footer-link" onclick="scrollToPricing()">Pricing</button>
@@ -1173,6 +1212,10 @@
         <a class="footer-link" href="/privacy" onclick="event.preventDefault(); openPrivacyModal();">Privacy Policy</a>
         <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="/refund" onclick="event.preventDefault(); openRefundModal();">Refund Policy</a>
+        <span class="footer-dot">&middot;</span>
+        <a class="footer-link" href="/ai-humanizer" onclick="event.preventDefault(); openAiHumanizerModal();">AI Humanizer</a>
+        <span class="footer-dot">&middot;</span>
+        <a class="footer-link" href="/ai-detector" onclick="event.preventDefault(); openAiDetectorModal();">AI Detector</a>
         <span class="footer-dot">&middot;</span>
         <a class="footer-link" href="/blog/what-is-an-ai-humanizer" onclick="event.preventDefault(); openBlogHumanizerModal();">Blog</a>
         <span class="footer-dot">&middot;</span>
@@ -1354,6 +1397,89 @@
         <p>AIwritehuman runs a 54-pattern two-pass audit built specifically for business and professional writing: a first pass rewrites structure and phrasing, a second pass checks the result against the full pattern list and your chosen voice settings (tone, British English strength, academic hedging, sentence variation) before returning it. It's built for people who need AI-assisted drafts to read like their own writing &mdash; marketers, consultants, and professionals producing client-facing copy &mdash; not for evading academic-integrity checks.</p>
 
         <p>Free to try, with plans from $12/mo. <a href="/">Try the humanizer</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI HUMANIZER PAGE ───────────────────────────────────── -->
+  <div class="modal-overlay" id="aiHumanizerModal" role="dialog" aria-modal="true" aria-label="AI humanizer for business writing">
+    <div class="modal-box refund-box">
+      <button type="button" class="modal-close" onclick="closeAiHumanizerModal()" aria-label="Close">&times;</button>
+      <div class="modal-title">AI Humanizer for Business Writing</div>
+      <div class="modal-sub">AIwritehuman</div>
+      <div class="refund-body">
+        <p>AIwritehuman's AI humanizer rewrites AI-generated drafts &mdash; from ChatGPT, Claude, or any other model &mdash; into natural, on-brand business writing. It doesn't just swap words; it runs a two-pass, 54-pattern audit that targets the specific habits that make AI text recognisable: uniform sentence length, repeated transition words and hedges, and generic phrasing.</p>
+
+        <h4>How it works</h4>
+        <p>Paste a draft into the tool. The first pass rewrites structure and phrasing against the full 54-pattern list; the second pass checks the result against your chosen voice settings &mdash; tone, British English strength, academic hedging, and sentence variation &mdash; before returning it. You can also paste a sample of your own writing to calibrate the output to your voice.</p>
+
+        <h4>Who it's for</h4>
+        <p>Marketers producing blog posts and campaign copy, consultants and analysts writing client-facing reports, and professionals who use AI to draft emails and documents but need the result to read as their own writing.</p>
+
+        <h4>Example</h4>
+        <p>An AI-drafted line such as <em>"In today's fast-paced digital landscape, it is important to note that businesses must leverage cutting-edge solutions"</em> comes back re-shaped into plainer, more specific language with the generic framing and hedge words removed &mdash; the same point, without the tell-tale phrasing.</p>
+
+        <h4>Pricing</h4>
+        <p>Free to try. Paid plans start from $12/mo with higher word limits per generation and monthly quotas. Every paid plan carries a 14-day money-back guarantee.</p>
+
+        <h4>FAQ</h4>
+        <p><strong>Does it change the meaning of my text?</strong> No &mdash; the audit is built to preserve meaning, facts, and structure; it changes phrasing and rhythm, not content.</p>
+        <p><strong>Will it guarantee my text passes an AI detector?</strong> No legitimate humanizer can promise that. Use the built-in <a href="/ai-detector" onclick="event.preventDefault(); closeAiHumanizerModal(); openAiDetectorModal();">AI detector</a> to see where a draft stands.</p>
+
+        <p><a href="/" onclick="event.preventDefault(); closeAiHumanizerModal();">Try the AI humanizer free</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI DETECTOR PAGE ────────────────────────────────────── -->
+  <div class="modal-overlay" id="aiDetectorModal" role="dialog" aria-modal="true" aria-label="AI detector for business writing">
+    <div class="modal-box refund-box">
+      <button type="button" class="modal-close" onclick="closeAiDetectorModal()" aria-label="Close">&times;</button>
+      <div class="modal-title">AI Detector for Business Writing</div>
+      <div class="modal-sub">AIwritehuman</div>
+      <div class="refund-body">
+        <p>AIwritehuman includes a built-in AI detector &mdash; called AI Check &mdash; powered by Winston AI, so you can score any draft for AI-probability and see which sentences are flagged, before you send it.</p>
+
+        <h4>How it works</h4>
+        <p>Run a draft through AI Check and it returns an overall AI-probability percentage plus sentence-level highlighting, so you can see which parts of a draft read as AI-generated rather than getting a single opaque score.</p>
+
+        <h4>AI detector vs AI humanizer</h4>
+        <p>An AI detector scores text; it doesn't change it. Use AI Check as a diagnostic &mdash; run a draft, see what's flagged, then use the <a href="/ai-humanizer" onclick="event.preventDefault(); closeAiDetectorModal(); openAiHumanizerModal();">AI humanizer</a> to rewrite the flagged sections. Detector scores also vary between providers, and none should be treated as a certainty.</p>
+
+        <h4>An honest limit</h4>
+        <p>No detector is perfect, and no humanizer can honestly guarantee it will defeat every detector on the market. AIwritehuman doesn't make that claim. AI Check exists so you can check your own work, not to promise a guaranteed score, and it isn't a substitute for your organisation's own disclosure requirements around AI-assisted writing.</p>
+
+        <h4>Pricing</h4>
+        <p>AI Check is available on paid plans &mdash; see full pricing on the homepage.</p>
+
+        <p><a href="/" onclick="event.preventDefault(); closeAiDetectorModal();">Try AIwritehuman free</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BLOG: AI WRITING GUIDE MODAL ────────────────────────── -->
+  <div class="modal-overlay" id="blogWritingGuideModal" role="dialog" aria-modal="true" aria-label="AI writing guide">
+    <div class="modal-box refund-box">
+      <button type="button" class="modal-close" onclick="closeBlogWritingGuideModal()" aria-label="Close">&times;</button>
+      <div class="modal-title">AI Writing Guide: Getting From an AI Draft to Finished Business Writing</div>
+      <div class="modal-sub">AIwritehuman &mdash; Blog</div>
+      <div class="refund-body">
+        <p>AI models like ChatGPT and Claude have made drafting faster, but a first AI draft is rarely finished business writing. This guide walks through a simple, repeatable workflow for turning an AI-assisted draft into something you'd actually publish or send &mdash; whether it's a blog post, a client email, a report, or marketing copy.</p>
+
+        <h4>Step 1: Draft with an AI model</h4>
+        <p>Use ChatGPT, Claude, or whichever model you prefer to get a first draft down quickly. This step is about getting ideas and structure on the page, not final wording &mdash; don't spend time polishing phrasing here.</p>
+
+        <h4>Step 2: Humanize the draft</h4>
+        <p>Run the draft through an <a href="/ai-humanizer" onclick="event.preventDefault(); closeBlogWritingGuideModal(); openAiHumanizerModal();">AI humanizer</a> to remove the patterns that make AI writing recognisable &mdash; repetitive sentence rhythm, stock transitions, generic hedging &mdash; while keeping your facts and structure. Set tone and voice preferences (formal or conversational, British English strength, academic hedging) so the result matches how you'd actually write.</p>
+
+        <h4>Step 3: Check before you send it</h4>
+        <p>Run the result through an <a href="/ai-detector" onclick="event.preventDefault(); closeBlogWritingGuideModal(); openAiDetectorModal();">AI detector</a> to see how it scores and which sentences, if any, are still flagged. Treat this as a diagnostic step, not a guarantee &mdash; no tool can honestly promise to defeat every detector, and this step is about catching obvious tells, not gaming a score.</p>
+
+        <h4>Applying this by use case</h4>
+        <p><strong>Blog posts:</strong> draft the structure and key points with AI, then humanize for voice before publishing. <strong>Emails:</strong> a quick humanize pass keeps replies fast without sounding templated. <strong>Reports:</strong> humanizing matters most here &mdash; a report that reads as AI-generated undermines the credibility of the analysis inside it. <strong>Marketing copy:</strong> humanize against a calibrated voice sample so campaign copy matches your brand consistently.</p>
+
+        <h4>Further reading</h4>
+        <p>See <a href="/blog/what-is-an-ai-humanizer" onclick="event.preventDefault(); closeBlogWritingGuideModal(); openBlogHumanizerModal();">What Is an AI Humanizer?</a> for more on how the rewriting step works, or go straight to <a href="/" onclick="event.preventDefault(); closeBlogWritingGuideModal();">the tool</a> to try it on your own draft.</p>
       </div>
     </div>
   </div>
@@ -1701,6 +1827,12 @@
     function closePrivacyModal(){ $('privacyModal').classList.remove('open'); }
     function openBlogHumanizerModal()  { $('blogHumanizerModal').classList.add('open'); }
     function closeBlogHumanizerModal() { $('blogHumanizerModal').classList.remove('open'); }
+    function openAiHumanizerModal()  { $('aiHumanizerModal').classList.add('open'); }
+    function closeAiHumanizerModal() { $('aiHumanizerModal').classList.remove('open'); }
+    function openAiDetectorModal()  { $('aiDetectorModal').classList.add('open'); }
+    function closeAiDetectorModal() { $('aiDetectorModal').classList.remove('open'); }
+    function openBlogWritingGuideModal()  { $('blogWritingGuideModal').classList.add('open'); }
+    function closeBlogWritingGuideModal() { $('blogWritingGuideModal').classList.remove('open'); }
 
     // Deep-link routing (title/description/canonical + pushState) is handled
     // by the legaldeeplink.js block near the end of </body>, after this
@@ -1748,6 +1880,9 @@
     $('termsModal').addEventListener('click', e => { if (e.target === $('termsModal')) closeTermsModal(); });
     $('privacyModal').addEventListener('click', e => { if (e.target === $('privacyModal')) closePrivacyModal(); });
     $('blogHumanizerModal').addEventListener('click', e => { if (e.target === $('blogHumanizerModal')) closeBlogHumanizerModal(); });
+    $('aiHumanizerModal').addEventListener('click', e => { if (e.target === $('aiHumanizerModal')) closeAiHumanizerModal(); });
+    $('aiDetectorModal').addEventListener('click', e => { if (e.target === $('aiDetectorModal')) closeAiDetectorModal(); });
+    $('blogWritingGuideModal').addEventListener('click', e => { if (e.target === $('blogWritingGuideModal')) closeBlogWritingGuideModal(); });
 
     // ── Bootstrap auth on load ────────────────────────────────────────────────
     (async () => {
@@ -2124,6 +2259,21 @@
           open: 'openBlogHumanizerModal',
           title: 'What Is an AI Humanizer? — AIwritehuman',
           desc: 'What an AI humanizer does, how it differs from an AI detector, and how AIwritehuman\'s 54-pattern two-pass audit humanizes AI text for business writing.'
+        },
+        '/ai-humanizer': {
+          open: 'openAiHumanizerModal',
+          title: 'AI Humanizer for Business Writing | AIwritehuman',
+          desc: 'Rewrite AI-generated drafts into natural, on-brand business writing with AIwritehuman\'s 54-pattern two-pass AI humanizer. Free to try, plans from $12/mo.'
+        },
+        '/ai-detector': {
+          open: 'openAiDetectorModal',
+          title: 'AI Detector for Business Writing | AIwritehuman',
+          desc: 'Check any draft for AI-probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
+        },
+        '/blog/ai-writing-guide': {
+          open: 'openBlogWritingGuideModal',
+          title: 'AI Writing Guide: From AI Draft to Finished Business Writing — AIwritehuman',
+          desc: 'A step-by-step guide to drafting with AI, humanizing the result, and checking it before you publish or send it — for blogs, emails, reports, and marketing copy.'
         }
       };
 
