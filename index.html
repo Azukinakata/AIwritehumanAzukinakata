@@ -1783,6 +1783,36 @@
     </div>
   </div>
 
+  <!-- ── BLOG: AI HUMANIZER FOR GOOGLE BUSINESS PROFILE ──────── -->
+  <div class="modal-overlay" id="blogGbpModal" role="dialog" aria-modal="true" aria-label="AI humanizer for Google Business Profile">
+    <div class="modal-box refund-box">
+      <button type="button" class="modal-close" onclick="closeBlogGbpModal()" aria-label="Close">&times;</button>
+      <div class="modal-title">Using an AI Humanizer for Your Google Business Profile</div>
+      <div class="modal-sub">AIwritehuman &mdash; Blog</div>
+      <div class="refund-body">
+        <p>A Google Business Profile is one of the few places where AI-sounding copy costs you directly &mdash; a generic business description or a templated review reply reads as impersonal on a listing that's supposed to represent a real, local business. Here's how to use an AI humanizer on the parts of a GBP listing that actually benefit from it.</p>
+
+        <h4>Business description</h4>
+        <p>State what you do, where you're based, and what makes you different in the first sentence or two &mdash; don't bury it under a long-winded introduction. If a first draft came from an AI model, humanize it with a professional or conversational tone rather than leaving in the generic framing AI models default to.</p>
+
+        <h4>Posts and updates</h4>
+        <p>Keep posts short, with a clear call to action near the top ("Book today," "Call now"). Set a casual, conversational tone when you humanize these &mdash; a Google Post reads better as something a local business owner would actually say, not a polished press release.</p>
+
+        <h4>Review replies</h4>
+        <p>The biggest mistake here is sending the same AI-drafted reply to every review. Vary each one: mention the reviewer by name, reference the specific service they used, and keep the tone consistent with how you actually talk to customers. Pasting a sample of your own past replies as a voice reference &mdash; see <a href="/voice-matching" onclick="event.preventDefault(); closeBlogGbpModal(); openVoiceMatchingModal();">voice matching</a> &mdash; helps each humanized reply sound like you rather than like a template with the name swapped out.</p>
+
+        <h4>Service descriptions</h4>
+        <p>Use bullet points and lead with the benefit to the customer, not technical filler. AI drafts often pad service descriptions with vague, generic language ("state-of-the-art," "comprehensive solutions") that says nothing specific &mdash; AIwritehuman's audit targets exactly this kind of filler.</p>
+
+        <h4>Names, locations, and services stay intact</h4>
+        <p>AIwritehuman's rewrite process is built to keep every name, number, and concrete detail exactly as given rather than smoothing them into generic phrasing &mdash; so your business name, suburb, and specific service names come through the rewrite unchanged. Always double-check the output before publishing, the same as you would with any edited copy.</p>
+
+        <h4>Try it</h4>
+        <p><a href="/" onclick="event.preventDefault(); closeBlogGbpModal();">Paste your listing copy</a> and try it, free.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ── State ────────────────────────────────────────────────────────────────
     const state = {
@@ -2155,6 +2185,8 @@
     function closeBlogVsModal() { $('blogVsModal').classList.remove('open'); }
     function openBlogHumanizeChatgptModal()  { $('blogHumanizeChatgptModal').classList.add('open'); }
     function closeBlogHumanizeChatgptModal() { $('blogHumanizeChatgptModal').classList.remove('open'); }
+    function openBlogGbpModal()  { $('blogGbpModal').classList.add('open'); }
+    function closeBlogGbpModal() { $('blogGbpModal').classList.remove('open'); }
 
     // Deep-link routing (title/description/canonical + pushState) is handled
     // by the legaldeeplink.js block near the end of </body>, after this
@@ -2214,6 +2246,7 @@
     $('blogSoundHumanModal').addEventListener('click', e => { if (e.target === $('blogSoundHumanModal')) closeBlogSoundHumanModal(); });
     $('blogVsModal').addEventListener('click', e => { if (e.target === $('blogVsModal')) closeBlogVsModal(); });
     $('blogHumanizeChatgptModal').addEventListener('click', e => { if (e.target === $('blogHumanizeChatgptModal')) closeBlogHumanizeChatgptModal(); });
+    $('blogGbpModal').addEventListener('click', e => { if (e.target === $('blogGbpModal')) closeBlogGbpModal(); });
 
     // ── Bootstrap auth on load ────────────────────────────────────────────────
     (async () => {
@@ -2655,6 +2688,11 @@
           open: 'openBlogHumanizeChatgptModal',
           title: 'How to Humanize ChatGPT Text — AIwritehuman',
           desc: 'A step-by-step process for turning a ChatGPT draft into natural, publishable writing without changing what it says.'
+        },
+        '/blog/ai-humanizer-for-google-business-profile': {
+          open: 'openBlogGbpModal',
+          title: 'Using an AI Humanizer for Your Google Business Profile — AIwritehuman',
+          desc: 'How to humanize business descriptions, posts, review replies, and service descriptions on a Google Business Profile without losing your name, location, or services.'
         }
       };
 
