@@ -1,4 +1,5 @@
 'use strict';
+const fs      = require('fs');
 const https   = require('https');
 const path    = require('path');
 const express = require('express');
@@ -779,10 +780,123 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // Static files
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// index.html is a single-page app: every route below serves this same file,
+// and a client-side script rewrites <title>/<meta description>/canonical
+// per path after it loads. That rewrite only runs in a browser — Googlebot's
+// canonical-tag detection goes off the raw HTTP response, which was
+// otherwise identical (and homepage-canonical) for every URL on the site.
+// This table restates the same title/description per route server-side so
+// the raw response is already correct. Keep in sync with the client-side
+// `ROUTES` table in index.html (search for "var ROUTES = {") when adding
+// or editing a page.
+const SEO_ROUTES = {
+  '/terms': {
+    title: 'Terms of Service — AIwritehuman',
+    desc: 'The terms governing use of AIwritehuman, including subscriptions, acceptable use, and account termination.'
+  },
+  '/privacy': {
+    title: 'Privacy Policy — AIwritehuman',
+    desc: 'How AIwritehuman collects, stores and processes your text and account data, and the rights you have over it.'
+  },
+  '/refund': {
+    title: 'Refund Policy — AIwritehuman',
+    desc: 'Refund eligibility, timeframes and how to request a refund for an AIwritehuman subscription.'
+  },
+  '/blog/what-is-an-ai-humanizer': {
+    title: 'What Is an AI Humanizer? — AIwritehuman',
+    desc: 'What an AI humanizer does, how it differs from an AI detector, and how AIwritehuman\'s 54-pattern two-pass audit humanizes AI text for business writing.'
+  },
+  '/ai-humanizer': {
+    title: 'AI Humanizer Tool — Rewrite ChatGPT & Claude Output into Natural Business Prose | AIwritehuman',
+    desc: 'A production-grade AI humanizer for business writers. Rewrites ChatGPT, Claude and Gemini drafts into clear, publishable prose while preserving meaning, facts and structure. 54-pattern two-pass audit, eight tone modes, voice calibration.'
+  },
+  '/ai-detector': {
+    title: 'AI Detector for Business Writing | AIwritehuman',
+    desc: 'Check any draft for AI-probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
+  },
+  '/blog/ai-writing-guide': {
+    title: 'AI Writing Guide: From AI Draft to Finished Business Writing — AIwritehuman',
+    desc: 'A step-by-step guide to drafting with AI, humanizing the result, and checking it before you publish or send it — for blogs, emails, reports, and marketing copy.'
+  },
+  '/humanize-chatgpt-text': {
+    title: 'Humanize ChatGPT Text Without Changing the Meaning | AIwritehuman',
+    desc: 'Rewrite ChatGPT drafts into natural, professional writing while keeping your facts and meaning intact, with AIwritehuman\'s two-pass AI humanizer.'
+  },
+  '/voice-matching': {
+    title: 'Match Your Writing Style with AIwritehuman',
+    desc: 'Paste a sample of your own writing and calibrate AIwritehuman\'s AI humanizer output to your rhythm, phrasing, and tone.'
+  },
+  '/pricing': {
+    title: 'AI Humanizer Pricing | Plans for Writers and Businesses — AIwritehuman',
+    desc: 'AIwritehuman plans and pricing: free to try, paid plans from $12/mo with higher word limits, AI Check, and a 14-day money-back guarantee.'
+  },
+  '/api': {
+    title: 'AI Humanizer API | AIwritehuman',
+    desc: 'Programmatic API access for AIwritehuman is not yet available — see what exists today and how to register interest.'
+  },
+  '/ai-humanizer-for-business': {
+    title: 'AI Humanizer for Business and Professional Writing | AIwritehuman',
+    desc: 'Rewrite AI-assisted business drafts — reports, proposals, client emails — into natural, professional writing with AIwritehuman.'
+  },
+  '/ai-humanizer-for-seo': {
+    title: 'AI Humanizer for SEO Content and Marketing Teams | AIwritehuman',
+    desc: 'Humanize AI-assisted blog posts and SEO content into natural, on-brand writing before you publish, with AIwritehuman.'
+  },
+  '/ai-humanizer-for-agencies': {
+    title: 'AI Humanizer for Agencies | AIwritehuman',
+    desc: 'Calibrate AIwritehuman\'s AI humanizer to each client\'s voice with per-client voice matching, built for agency and multi-client workflows.'
+  },
+  '/blog/how-to-make-ai-writing-sound-human': {
+    title: 'How to Make AI Writing Sound Human — AIwritehuman',
+    desc: 'Practical edits — sentence variation, cutting hedging, replacing stock transitions, getting specific — for making AI-generated drafts read naturally.'
+  },
+  '/blog/ai-humanizer-vs-ai-detector': {
+    title: 'AI Humanizer vs AI Detector: What\'s the Difference? — AIwritehuman',
+    desc: 'An AI detector scores text; an AI humanizer rewrites it. How the two tools differ and how to use them together.'
+  },
+  '/blog/how-to-humanize-chatgpt-text': {
+    title: 'How to Humanize ChatGPT Text — AIwritehuman',
+    desc: 'A step-by-step process for turning a ChatGPT draft into natural, publishable writing without changing what it says.'
+  },
+  '/blog/ai-humanizer-for-google-business-profile': {
+    title: 'Using an AI Humanizer for Your Google Business Profile — AIwritehuman',
+    desc: 'How to humanize business descriptions, posts, review replies, and service descriptions on a Google Business Profile without losing your name, location, or services.'
+  }
+};
+
+const INDEX_HTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const HOME_TITLE = (INDEX_HTML.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+const HOME_DESC  = (INDEX_HTML.match(/<meta name="description" content="([^"]*)">/) || [])[1] || '';
+
+function escapeHtmlAttr(str) {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+}
+
+function renderIndexFor(reqPath) {
+  const route = SEO_ROUTES[reqPath.length > 1 ? reqPath.replace(/\/+$/, '') : reqPath];
+  if (!route) return INDEX_HTML;
+
+  const canonical = SITE_URL.replace(/\/$/, '') + reqPath;
+  const title = escapeHtmlAttr(route.title);
+  const desc  = escapeHtmlAttr(route.desc);
+
+  return INDEX_HTML
+    .replace(`<title>${HOME_TITLE}</title>`, `<title>${title}</title>`)
+    .replace(`<meta name="description" content="${escapeHtmlAttr(HOME_DESC)}">`, `<meta name="description" content="${desc}">`)
+    .replace('<link rel="canonical" href="https://aiwritehuman.com/">', `<link rel="canonical" href="${canonical}">`)
+    .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${title}">`)
+    .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${desc}">`)
+    .replace('<meta property="og:url" content="https://aiwritehuman.com/">', `<meta property="og:url" content="${canonical}">`)
+    .replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${title}">`)
+    .replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
+}
+
 app.use(express.static(path.join(__dirname), { index: 'index.html' }));
 app.get('*', (req, res) => {
-  if (!req.path.includes('.')) res.sendFile(path.join(__dirname, 'index.html'));
-  else res.status(404).end();
+  if (req.path.includes('.')) return res.status(404).end();
+  res.set('Content-Type', 'text/html; charset=UTF-8');
+  res.send(renderIndexFor(req.path));
 });
 
 app.listen(PORT, () => {

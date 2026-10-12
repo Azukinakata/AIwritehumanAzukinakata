@@ -11,8 +11,8 @@
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AIwritehuman">
-  <meta property="og:title" content="AIwritehuman — AI Text Humanizer">
-  <meta property="og:description" content="Rewrites AI-generated drafts into natural, on-brand writing. 54-pattern two-pass audit. Free to try, plans from $12/mo.">
+  <meta property="og:title" content="AI Humanizer for Business Writing | AIwritehuman">
+  <meta property="og:description" content="Humanize ChatGPT, Claude and other AI drafts into natural, professional writing. Match your voice, adjust tone and refine business copy with AIwritehuman.">
   <meta property="og:url" content="https://aiwritehuman.com/">
   <meta property="og:image" content="https://aiwritehuman.com/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -21,8 +21,8 @@
   <meta property="og:image:alt" content="AIwritehuman logo">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AIwritehuman — AI Text Humanizer">
-  <meta name="twitter:description" content="Rewrites AI-generated drafts into natural, on-brand writing. 54-pattern two-pass audit. Free to try, plans from $12/mo.">
+  <meta name="twitter:title" content="AI Humanizer for Business Writing | AIwritehuman">
+  <meta name="twitter:description" content="Humanize ChatGPT, Claude and other AI drafts into natural, professional writing. Match your voice, adjust tone and refine business copy with AIwritehuman.">
   <meta name="twitter:image" content="https://aiwritehuman.com/og-image.jpg">
   <meta name="twitter:image:alt" content="AIwritehuman logo">
 
@@ -739,6 +739,11 @@
     .refund-body p { font-size: 0.86rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 14px; }
     .refund-body h4 { font-size: 0.9rem; color: #e4e4e7; margin: 4px 0 6px; }
     .refund-body a { color: #d4d4d8; }
+    .refund-body ul, .refund-body ol {
+      font-size: 0.86rem; color: var(--text-mid); line-height: 1.65;
+      margin: 0 0 14px; padding-left: 20px;
+    }
+    .refund-body li { margin-bottom: 4px; }
     .modal-tabs { display: flex; gap: 0; margin-bottom: 22px; border-radius: var(--r-sm); overflow: hidden; border: 1px solid rgba(255,255,255,0.16); }
     .modal-tab {
       flex: 1; padding: 9px 0; text-align: center;
@@ -1382,16 +1387,39 @@
       <div class="modal-title">AI Humanizer for Business Writing</div>
       <div class="modal-sub">AIwritehuman</div>
       <div class="refund-body">
-        <p>AIwritehuman's AI humanizer rewrites AI-generated drafts &mdash; from ChatGPT, Claude, or any other model &mdash; into natural, on-brand business writing. It doesn't just swap words; it runs a two-pass, 54-pattern audit that targets the specific habits that make AI text recognisable: uniform sentence length, repeated transition words and hedges, and generic phrasing.</p>
+        <p>Paste a draft from ChatGPT, Claude, Gemini or any other model. Get back prose that reads like it was written by a person on your team &mdash; same meaning, same facts, same structure, none of the giveaways.</p>
 
-        <h4>How it works</h4>
-        <p>Paste a draft into the tool. The first pass rewrites structure and phrasing against the full 54-pattern list; the second pass checks the result against your chosen voice settings &mdash; tone, British English strength, academic hedging, and sentence variation &mdash; before returning it. You can also paste a sample of your own writing to calibrate the output to your voice.</p>
+        <h4>What this tool actually does</h4>
+        <p>AIwritehuman runs your text through a 54-pattern two-pass audit built specifically for the artefacts large language models leave behind: hedged openings, generic transitions, over-qualified claims, and the uniform sentence rhythm that pattern-based AI detectors pick up on. The first pass rewrites. The second pass audits the rewrite against the same pattern library and corrects anything that slipped through.</p>
+        <p>Unlike one-click rewrite tools, the humanizer treats structure as sacred. If your draft has a thesis, a three-point argument and a conclusion, the output has a thesis, a three-point argument and a conclusion. If a figure says $4.2M, the output says $4.2M. Nothing is paraphrased into vagueness; nothing is invented.</p>
 
-        <h4>Who it's for</h4>
-        <p>Marketers producing blog posts and campaign copy, consultants and analysts writing client-facing reports, and professionals who use AI to draft emails and documents but need the result to read as their own writing.</p>
+        <h4>Built for business writing, not for cheating a classroom</h4>
+        <p>AIwritehuman is a B2B tool. We do not optimise for bypassing institutional academic-integrity systems, and we don't position toward the student-evasion market.</p>
+        <ul>
+          <li><strong>Marketing &amp; content teams</strong> &mdash; blog posts, newsletters and landing-page copy that pass editorial review.</li>
+          <li><strong>Agencies</strong> &mdash; AI-assisted deliverables that match a client's house voice without a second round of manual rewriting.</li>
+          <li><strong>Consultants &amp; analysts</strong> &mdash; structured AI drafts of proposals, reports and briefs turned into polished documents.</li>
+          <li><strong>In-house editors</strong> &mdash; tightening submissions coming in from colleagues using ChatGPT and Claude.</li>
+        </ul>
+
+        <h4>Eight tones, four fine-tuning sliders, optional voice calibration</h4>
+        <p>The humanizer ships with eight preset tones &mdash; Standard, Professional, Academic, Blog/SEO, Casual, Creative, Scientific and Technical. On top of the tone, four sliders let you dial in the output: humanization intensity, British English strength, academic hedging, and sentence variation. For teams that need their own voice applied consistently, voice calibration accepts a sample of your own writing and biases the rewrite toward your vocabulary, sentence length and rhetorical habits &mdash; see <a href="/voice-matching" onclick="event.preventDefault(); closeAiHumanizerModal(); openVoiceMatchingModal();">voice matching</a>.</p>
 
         <h4>Example</h4>
         <p>An AI-drafted line such as <em>"In today's fast-paced digital landscape, it is important to note that businesses must leverage cutting-edge solutions"</em> comes back re-shaped into plainer, more specific language with the generic framing and hedge words removed &mdash; the same point, without the tell-tale phrasing.</p>
+
+        <h4>What the tool does not do</h4>
+        <p>No scraping, no third-party model training on your inputs. Drafts are processed and discarded &mdash; only a one-way hash is kept for abuse prevention, detailed in the <a href="/privacy" onclick="event.preventDefault(); closeAiHumanizerModal(); openPrivacyModal();">privacy policy</a>. The humanization pipeline runs through the Claude API under WRITEHUMAN (Pty) Ltd, our South African operating entity, with billing through Paddle as merchant of record.</p>
+
+        <h4>How to use it</h4>
+        <ol>
+          <li>Paste your AI-generated draft into the input panel.</li>
+          <li>Pick a tone preset that matches the register you want.</li>
+          <li>Adjust the four sliders if the defaults don't fit the job.</li>
+          <li>Optionally paste a sample of your own writing into voice calibration.</li>
+          <li>Click Humanize &mdash; the two-pass audit runs in a few seconds.</li>
+          <li>Review the output, run it through <a href="/ai-detector" onclick="event.preventDefault(); closeAiHumanizerModal(); openAiDetectorModal();">AI Check</a> if you want a diagnostic score, and copy the result.</li>
+        </ol>
 
         <h4>Pricing</h4>
         <p>Free to try. Paid plans start from $12/mo with higher word limits per generation and monthly quotas. Every paid plan carries a 14-day money-back guarantee.</p>
