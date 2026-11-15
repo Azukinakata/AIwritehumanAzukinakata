@@ -654,8 +654,16 @@ app.post('/api/humanize', enforcePlan, (req, res) => {
   }).catch((err) => console.warn('[typesafe] pre-check failed:', err?.message || err));
 
   const payload = JSON.stringify({
-    model:      'claude-haiku-4-5',
-    max_tokens: 8192,
+    // Model and effort are env-driven so quality/cost can be tuned (or rolled
+    // back with HUMANIZE_MODEL=claude-haiku-4-5, which does not accept effort)
+    // from Render without a deploy. The prompt's draft/audit/final loop only
+    // really runs when the model can think: Sonnet 5.5 runs adaptive thinking
+    // by default (no `thinking` param needed). Thinking tokens count toward
+    // max_tokens, hence the larger cap. Sampling params stay unset (Sonnet 5.5
+    // rejects non-default values).
+    model:      process.env.HUMANIZE_MODEL || 'claude-sonnet-5-5',
+    max_tokens: 16000,
+    ...(process.env.HUMANIZE_EFFORT ? { output_config: { effort: process.env.HUMANIZE_EFFORT } } : {}),
     stream:     true,
     // Two content blocks: the ~9.4k-token static instruction set is cached
     // and re-read across every humanize call (any tone, any user); the
