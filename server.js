@@ -821,7 +821,7 @@ const SEO_ROUTES = {
   },
   '/ai-detector': {
     title: 'AI Detector with Sentence-Level Highlighting | AIwritehuman',
-    desc: 'Check any draft for AI probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
+    desc: 'Check a draft for AI-sounding sentences before you publish. See exactly which lines to edit, then refine them in one place.'
   },
   '/blog/ai-writing-guide': {
     title: 'AI Writing Guide: From AI Draft to Finished Business Writing — AIwritehuman',
@@ -829,11 +829,11 @@ const SEO_ROUTES = {
   },
   '/humanize-chatgpt-text': {
     title: 'Humanize ChatGPT Text Without Changing the Meaning | AIwritehuman',
-    desc: 'Rewrite ChatGPT drafts into natural, professional writing while keeping your facts and meaning intact, with AIwritehuman\'s two-pass AI humanizer.'
+    desc: 'Keep your point, lose the robotic phrasing. Rewrite ChatGPT drafts into clear, natural business prose in a two-pass edit.'
   },
   '/voice-matching': {
-    title: 'Voice Matching: Make AI Text Sound Like You | AIwritehuman',
-    desc: 'Paste a sample of your own writing and AIwritehuman matches your rhythm, phrasing and tone, so humanized AI drafts sound like you wrote them.'
+    title: 'Make AI Text Sound Like You: Voice Matching | AIwritehuman',
+    desc: 'Paste 2-3 paragraphs of your own writing and AIwritehuman matches your rhythm and phrasing, so AI drafts read like you wrote them.'
   },
   '/pricing': {
     title: 'AI Humanizer Pricing: Free Plan, Paid from $12/mo | AIwritehuman',
@@ -860,8 +860,8 @@ const SEO_ROUTES = {
     desc: 'Practical edits — sentence variation, cutting hedging, replacing stock transitions, getting specific — for making AI-generated drafts read naturally.'
   },
   '/blog/ai-humanizer-vs-ai-detector': {
-    title: 'AI Humanizer vs AI Detector: How They Differ | AIwritehuman',
-    desc: 'AI humanizer vs AI detector: a detector scores text for AI probability, a humanizer rewrites it. See how they differ and how to use both before you publish.'
+    title: 'AI Humanizer vs AI Detector: Key Differences | AIwritehuman',
+    desc: 'A humanizer rewrites text; a detector scores it. See how each works, when to use them together, and where both fall short.'
   },
   '/blog/how-to-humanize-chatgpt-text': {
     title: 'How to Humanize ChatGPT Text — AIwritehuman',
@@ -874,6 +874,8 @@ const SEO_ROUTES = {
 };
 
 const INDEX_HTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const { buildPages, injectPage } = require('./seoRender');
+const SSR_PAGES = buildPages(INDEX_HTML);
 const HOME_TITLE = (INDEX_HTML.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
 const HOME_DESC  = (INDEX_HTML.match(/<meta name="description" content="([^"]*)">/) || [])[1] || '';
 
@@ -889,7 +891,7 @@ function renderIndexFor(reqPath) {
   const title = escapeHtmlAttr(route.title);
   const desc  = escapeHtmlAttr(route.desc);
 
-  return INDEX_HTML
+  const html = INDEX_HTML
     .replace(`<title>${HOME_TITLE}</title>`, `<title>${title}</title>`)
     .replace(`<meta name="description" content="${escapeHtmlAttr(HOME_DESC)}">`, `<meta name="description" content="${desc}">`)
     .replace('<link rel="canonical" href="https://aiwritehuman.com/">', `<link rel="canonical" href="${canonical}">`)
@@ -898,6 +900,10 @@ function renderIndexFor(reqPath) {
     .replace('<meta property="og:url" content="https://aiwritehuman.com/">', `<meta property="og:url" content="${canonical}">`)
     .replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${title}">`)
     .replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${desc}">`);
+
+  // Give the route its own <h1> and body text in the raw response (see seoRender.js).
+  const page = SSR_PAGES[reqPath.length > 1 ? reqPath.replace(/\/+$/, '') : reqPath];
+  return page ? injectPage(html, page) : html;
 }
 
 app.use(express.static(path.join(__dirname), { index: 'index.html' }));

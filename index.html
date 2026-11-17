@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Humanizer for Business Writing | AIwritehuman</title>
-  <meta name="description" content="Humanize ChatGPT, Claude and other AI drafts into natural, professional writing. Match your voice, adjust tone and refine business copy with AIwritehuman.">
+  <title>AIwritehuman: AI Humanizer for Business Writing</title>
+  <meta name="description" content="Turn ChatGPT, Claude and Gemini drafts into natural business writing. Match your own voice and keep your facts intact. Try it free.">
   <link rel="canonical" href="https://aiwritehuman.com/">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <meta name="google-site-verification" content="_LzzhGgUh-gRtHqYVc6m2Qx1273timCyOMy2Vh-z0Hk">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AIwritehuman">
-  <meta property="og:title" content="AI Humanizer for Business Writing | AIwritehuman">
-  <meta property="og:description" content="Humanize ChatGPT, Claude and other AI drafts into natural, professional writing. Match your voice, adjust tone and refine business copy with AIwritehuman.">
+  <meta property="og:title" content="AIwritehuman: AI Humanizer for Business Writing">
+  <meta property="og:description" content="Turn ChatGPT, Claude and Gemini drafts into natural business writing. Match your own voice and keep your facts intact. Try it free.">
   <meta property="og:url" content="https://aiwritehuman.com/">
   <meta property="og:image" content="https://aiwritehuman.com/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -21,8 +21,8 @@
   <meta property="og:image:alt" content="AIwritehuman logo">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Humanizer for Business Writing | AIwritehuman">
-  <meta name="twitter:description" content="Humanize ChatGPT, Claude and other AI drafts into natural, professional writing. Match your voice, adjust tone and refine business copy with AIwritehuman.">
+  <meta name="twitter:title" content="AIwritehuman: AI Humanizer for Business Writing">
+  <meta name="twitter:description" content="Turn ChatGPT, Claude and Gemini drafts into natural business writing. Match your own voice and keep your facts intact. Try it free.">
   <meta name="twitter:image" content="https://aiwritehuman.com/og-image.jpg">
   <meta name="twitter:image:alt" content="AIwritehuman logo">
 
@@ -2599,7 +2599,7 @@
         '/ai-detector': {
           open: 'openAiDetectorModal',
           title: 'AI Detector with Sentence-Level Highlighting | AIwritehuman',
-          desc: 'Check any draft for AI probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
+          desc: 'Check a draft for AI-sounding sentences before you publish. See exactly which lines to edit, then refine them in one place.'
         },
         '/blog/ai-writing-guide': {
           open: 'openBlogWritingGuideModal',
@@ -2609,12 +2609,12 @@
         '/humanize-chatgpt-text': {
           open: 'openHumanizeChatgptModal',
           title: 'Humanize ChatGPT Text Without Changing the Meaning | AIwritehuman',
-          desc: 'Rewrite ChatGPT drafts into natural, professional writing while keeping your facts and meaning intact, with AIwritehuman\'s two-pass AI humanizer.'
+          desc: 'Keep your point, lose the robotic phrasing. Rewrite ChatGPT drafts into clear, natural business prose in a two-pass edit.'
         },
         '/voice-matching': {
           open: 'openVoiceMatchingModal',
-          title: 'Voice Matching: Make AI Text Sound Like You | AIwritehuman',
-          desc: 'Paste a sample of your own writing and AIwritehuman matches your rhythm, phrasing and tone, so humanized AI drafts sound like you wrote them.'
+          title: 'Make AI Text Sound Like You: Voice Matching | AIwritehuman',
+          desc: 'Paste 2-3 paragraphs of your own writing and AIwritehuman matches your rhythm and phrasing, so AI drafts read like you wrote them.'
         },
         '/pricing': {
           scroll: 'pricing',
@@ -2648,8 +2648,8 @@
         },
         '/blog/ai-humanizer-vs-ai-detector': {
           open: 'openBlogVsModal',
-          title: 'AI Humanizer vs AI Detector: How They Differ | AIwritehuman',
-          desc: 'AI humanizer vs AI detector: a detector scores text for AI probability, a humanizer rewrites it. See how they differ and how to use both before you publish.'
+          title: 'AI Humanizer vs AI Detector: Key Differences | AIwritehuman',
+          desc: 'A humanizer rewrites text; a detector scores it. See how each works, when to use them together, and where both fall short.'
         },
         '/blog/how-to-humanize-chatgpt-text': {
           open: 'openBlogHumanizeChatgptModal',
@@ -2719,6 +2719,7 @@
           if (target) target.scrollIntoView({ behavior: 'smooth' });
           return;
         }
+        if (window.__SSR_ROUTE) return; // server already rendered this page as an article
         var fn = window[route.open];
         if (typeof fn === 'function') fn();
       }
