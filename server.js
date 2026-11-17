@@ -820,8 +820,8 @@ const SEO_ROUTES = {
     desc: 'A production-grade AI humanizer for business writers. Rewrites ChatGPT, Claude and Gemini drafts into clear, publishable prose while preserving meaning, facts and structure. 54-pattern two-pass audit, eight tone modes, voice calibration.'
   },
   '/ai-detector': {
-    title: 'AI Detector for Business Writing | AIwritehuman',
-    desc: 'Check any draft for AI-probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
+    title: 'AI Detector with Sentence-Level Highlighting | AIwritehuman',
+    desc: 'Check any draft for AI probability with AI Check, AIwritehuman\'s built-in AI detector powered by Winston AI, with sentence-level highlighting.'
   },
   '/blog/ai-writing-guide': {
     title: 'AI Writing Guide: From AI Draft to Finished Business Writing — AIwritehuman',
@@ -832,12 +832,12 @@ const SEO_ROUTES = {
     desc: 'Rewrite ChatGPT drafts into natural, professional writing while keeping your facts and meaning intact, with AIwritehuman\'s two-pass AI humanizer.'
   },
   '/voice-matching': {
-    title: 'Match Your Writing Style with AIwritehuman',
-    desc: 'Paste a sample of your own writing and calibrate AIwritehuman\'s AI humanizer output to your rhythm, phrasing, and tone.'
+    title: 'Voice Matching: Make AI Text Sound Like You | AIwritehuman',
+    desc: 'Paste a sample of your own writing and AIwritehuman matches your rhythm, phrasing and tone, so humanized AI drafts sound like you wrote them.'
   },
   '/pricing': {
-    title: 'AI Humanizer Pricing | Plans for Writers and Businesses — AIwritehuman',
-    desc: 'AIwritehuman plans and pricing: free to try, paid plans from $12/mo with higher word limits, AI Check, and a 14-day money-back guarantee.'
+    title: 'AI Humanizer Pricing: Free Plan, Paid from $12/mo | AIwritehuman',
+    desc: 'AIwritehuman pricing: try it free, then paid plans from $12/mo with higher word limits, AI Check and a 14-day money-back guarantee.'
   },
   '/api': {
     title: 'AI Humanizer API | AIwritehuman',
@@ -860,8 +860,8 @@ const SEO_ROUTES = {
     desc: 'Practical edits — sentence variation, cutting hedging, replacing stock transitions, getting specific — for making AI-generated drafts read naturally.'
   },
   '/blog/ai-humanizer-vs-ai-detector': {
-    title: 'AI Humanizer vs AI Detector: What\'s the Difference? — AIwritehuman',
-    desc: 'An AI detector scores text; an AI humanizer rewrites it. How the two tools differ and how to use them together.'
+    title: 'AI Humanizer vs AI Detector: How They Differ | AIwritehuman',
+    desc: 'AI humanizer vs AI detector: a detector scores text for AI probability, a humanizer rewrites it. See how they differ and how to use both before you publish.'
   },
   '/blog/how-to-humanize-chatgpt-text': {
     title: 'How to Humanize ChatGPT Text — AIwritehuman',
