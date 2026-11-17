@@ -1426,51 +1426,62 @@
   <div class="modal-overlay" id="aiHumanizerModal" role="dialog" aria-modal="true" aria-label="AI humanizer for business writing">
     <div class="modal-box refund-box">
       <button type="button" class="modal-close" onclick="closeAiHumanizerModal()" aria-label="Close">&times;</button>
-      <div class="modal-title">AI Humanizer for Business Writing</div>
+      <div class="modal-title">The AIwritehuman AI Humanizer: 54 Patterns, Two Passes, Your Meaning Intact</div>
       <div class="modal-sub">AIwritehuman</div>
       <div class="refund-body">
-        <p>Paste a draft from ChatGPT, Claude, Gemini or any other model. Get back prose that reads like it was written by a person on your team &mdash; same meaning, same facts, same structure, none of the giveaways.</p>
+        <p>This page explains what the AIwritehuman humanizer does to a draft, step by step, so you can judge whether it fits your work before you paste anything in. It is built for business writing: reports, proposals, client emails, website copy and blog posts that started life in ChatGPT, Claude, Gemini or another model.</p>
 
-        <h4>What this tool actually does</h4>
-        <p>AIwritehuman runs your text through a 54-pattern two-pass audit built specifically for the artefacts large language models leave behind: hedged openings, generic transitions, over-qualified claims, and the uniform sentence rhythm that pattern-based AI detectors pick up on. The first pass rewrites. The second pass audits the rewrite against the same pattern library and corrects anything that slipped through.</p>
-        <p>Unlike one-click rewrite tools, the humanizer treats structure as sacred. If your draft has a thesis, a three-point argument and a conclusion, the output has a thesis, a three-point argument and a conclusion. If a figure says $4.2M, the output says $4.2M. Nothing is paraphrased into vagueness; nothing is invented.</p>
+        <h4>The two passes</h4>
 
-        <h4>Built for business writing, not for cheating a classroom</h4>
-        <p>AIwritehuman is a B2B tool. We do not optimise for bypassing institutional academic-integrity systems, and we don't position toward the student-evasion market.</p>
-        <ul>
-          <li><strong>Marketing &amp; content teams</strong> &mdash; blog posts, newsletters and landing-page copy that pass editorial review.</li>
-          <li><strong>Agencies</strong> &mdash; AI-assisted deliverables that match a client's house voice without a second round of manual rewriting.</li>
-          <li><strong>Consultants &amp; analysts</strong> &mdash; structured AI drafts of proposals, reports and briefs turned into polished documents.</li>
-          <li><strong>In-house editors</strong> &mdash; tightening submissions coming in from colleagues using ChatGPT and Claude.</li>
-        </ul>
+        <p><strong>Pass 1 rewrites.</strong> The draft is rewritten against a library of 54 patterns that language models tend to leave behind. The rewrite varies sentence length, changes where sentences begin, drops mechanical transitions and replaces generic wording with plainer words.</p>
 
-        <h4>Eight tones, four fine-tuning sliders, optional voice calibration</h4>
-        <p>The humanizer ships with eight preset tones &mdash; Standard, Professional, Academic, Blog/SEO, Casual, Creative, Scientific and Technical. On top of the tone, four sliders let you dial in the output: humanization intensity, British English strength, academic hedging, and sentence variation. For teams that need their own voice applied consistently, voice calibration accepts a sample of your own writing and biases the rewrite toward your vocabulary, sentence length and rhetorical habits &mdash; see <a href="/voice-matching" onclick="event.preventDefault(); closeAiHumanizerModal(); openVoiceMatchingModal();">voice matching</a>.</p>
+        <p><strong>Pass 2 audits.</strong> The rewrite is checked against the same library and against a short list of tests: is the rhythm still uniform, do several sentences open the same way, did any stock phrase survive, and does every fact still match your original. Anything that fails is corrected before you see the result.</p>
 
-        <h4>Example</h4>
-        <p>An AI-drafted line such as <em>"In today's fast-paced digital landscape, it is important to note that businesses must leverage cutting-edge solutions"</em> comes back re-shaped into plainer, more specific language with the generic framing and hedge words removed &mdash; the same point, without the tell-tale phrasing.</p>
+        <h4>What it changes</h4>
 
-        <h4>What the tool does not do</h4>
-        <p>No scraping, no third-party model training on your inputs. Drafts are processed and discarded &mdash; only a one-way hash is kept for abuse prevention, detailed in the <a href="/privacy" onclick="event.preventDefault(); closeAiHumanizerModal(); openPrivacyModal();">privacy policy</a>. The humanization pipeline runs through the Claude API under WRITEHUMAN (Pty) Ltd, our South African operating entity, with billing through Paddle as merchant of record.</p>
+        <ul><li><strong>Stock openers and transitions</strong> such as "In today's fast-paced world", "Moreover" and "It is important to note that".</li><li><strong>Stacked hedging</strong> such as "may potentially" and "in some cases", where the source did not need it.</li><li><strong>Uniform rhythm</strong>, where most sentences land at the same length and read like a metronome.</li><li><strong>Inflated vocabulary</strong> such as "leverage", "cutting-edge" and "streamline", swapped for plain verbs.</li><li><strong>Tidy lists of three</strong> that all follow the same structure.</li><li><strong>Leftover markup</strong> from AI tools, including stray citation codes and tracking parameters in links.</li></ul>
 
-        <h4>How to use it</h4>
-        <ol>
-          <li>Paste your AI-generated draft into the input panel.</li>
-          <li>Pick a tone preset that matches the register you want.</li>
-          <li>Adjust the four sliders if the defaults don't fit the job.</li>
-          <li>Optionally paste a sample of your own writing into voice calibration.</li>
-          <li>Click Humanize &mdash; the two-pass audit runs in a few seconds.</li>
-          <li>Review the output, run it through <a href="/ai-detector" onclick="event.preventDefault(); closeAiHumanizerModal(); openAiDetectorModal();">AI Check</a> if you want a diagnostic score, and copy the result.</li>
-        </ol>
+        <h4>What it leaves alone</h4>
+
+        <p>It keeps your names, numbers, dates and quotations exactly as written. Author-date citations such as (Smith 2021) stay in place, and so do headings and paragraph breaks. It is built not to add examples or claims that were not in your draft, and it aims to keep the length close to the original.</p>
+
+        <h4>A worked example</h4>
+
+        <p>This is an illustration of the kind of change to expect, not a promise of identical output. Results vary with the tone and settings you choose.</p>
+
+        <p><strong>Before:</strong> In today's fast-paced digital landscape, it is important to note that businesses must leverage cutting-edge solutions to streamline their operations. Moreover, it could be argued that automation may potentially reduce costs in some cases.</p>
+
+        <p><strong>After:</strong> Businesses need better tools to run leaner. Automation can cut costs, though not in every case.</p>
+
+        <p>The meaning is the same. The framing, the hedges and the buzzwords are gone, and the two sentences now have different lengths.</p>
+
+        <h4>Controls you can adjust</h4>
+
+        <p>There are eight tones: Standard, Professional, Academic, Blog/SEO, Casual, Creative, Scientific and Technical. Four sliders adjust humanisation intensity, British English strength, academic hedging and sentence variation. Voice calibration lets you paste two or three paragraphs of your own writing so the rewrite follows your habits; <a href="/voice-matching">see how voice matching works</a>. Output is available in English and Chinese.</p>
+
+        <h4>How it differs from a paraphraser</h4>
+
+        <p>A paraphraser swaps words and reorders clauses to avoid repetition, and the meaning can drift as it goes. A humanizer starts from a list of the specific habits that make machine text read as machine text, and checks its own work against that list and against your facts. The goal is writing that reads naturally, not text that merely looks different.</p>
+
+        <h4>Who it is for</h4>
+
+        <p>It is for people who publish AI-assisted business writing: marketing and content teams, agencies, consultants, analysts and in-house editors. It is not designed to defeat academic-integrity systems, and it does not promise any particular AI-detector result. Detectors disagree with one another, so treat any score as a pointer, and use AI Check to see which sentences still read as formulaic.</p>
+
+        <h4>Privacy and billing</h4>
+
+        <p>The text you submit is sent to our AI provider to generate your result and is not retained by us afterwards. We keep only a one-way hash of each prompt for abuse prevention, as set out in the privacy policy. Billing is handled by Paddle as merchant of record.</p>
 
         <h4>Pricing</h4>
-        <p>Free to try. Paid plans start from $12/mo with higher word limits per generation and monthly quotas. Every paid plan carries a 14-day money-back guarantee.</p>
 
-        <h4>FAQ</h4>
-        <p><strong>Does it change the meaning of my text?</strong> No &mdash; the audit is built to preserve meaning, facts, and structure; it changes phrasing and rhythm, not content.</p>
-        <p><strong>Will it guarantee my text passes an AI detector?</strong> No legitimate humanizer can promise that. Use the built-in <a href="/ai-detector" onclick="event.preventDefault(); closeAiHumanizerModal(); openAiDetectorModal();">AI detector</a> to see where a draft stands.</p>
+        <p>There is a free plan. Paid plans are Basic at $12 a month, Pro at $20 and Ultra at $35, with higher word limits and monthly quotas. Every paid plan has a 14-day money-back guarantee.</p>
 
-        <p><a href="/" onclick="event.preventDefault(); closeAiHumanizerModal();">Try the AI humanizer free</a>.</p>
+        <h4>Frequently asked questions</h4>
+
+        <p><strong>Does it change the meaning of my text?</strong> It is built to change phrasing and rhythm, not content. Read the result before you use it, as you would with any edit.</p>
+
+        <p><strong>Which AI tools does it work with?</strong> Any. It works on the text, so the source model does not matter.</p>
+
+        <p><strong>Can I check the result afterwards?</strong> Yes. AI Check highlights sentences that still read as machine-written so you can edit them by hand.</p>
       </div>
     </div>
   </div>
@@ -2776,8 +2787,8 @@
         },
         '/ai-humanizer': {
           open: 'openAiHumanizerModal',
-          title: 'AI Humanizer for Business Writing | AIwritehuman',
-          desc: 'Rewrite AI-generated drafts into natural, on-brand business writing with AIwritehuman\'s 54-pattern two-pass AI humanizer. Free to try, plans from $12/mo.'
+          title: 'AI Humanizer: How the 54-Pattern Rewrite Works | AIwritehuman',
+          desc: 'See exactly what AIwritehuman\'s AI humanizer changes in a draft: stock phrases, uniform rhythm and hedging, with its tones, settings and a worked example.'
         },
         '/ai-detector': {
           open: 'openAiDetectorModal',

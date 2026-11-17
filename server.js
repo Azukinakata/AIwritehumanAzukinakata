@@ -816,8 +816,8 @@ const SEO_ROUTES = {
     desc: 'What an AI humanizer does, how it differs from an AI detector, and how AIwritehuman\'s 54-pattern two-pass audit humanizes AI text for business writing.'
   },
   '/ai-humanizer': {
-    title: 'AI Humanizer Tool — Rewrite ChatGPT & Claude Output into Natural Business Prose | AIwritehuman',
-    desc: 'A production-grade AI humanizer for business writers. Rewrites ChatGPT, Claude and Gemini drafts into clear, publishable prose while preserving meaning, facts and structure. 54-pattern two-pass audit, eight tone modes, voice calibration.'
+    title: 'AI Humanizer: How the 54-Pattern Rewrite Works | AIwritehuman',
+    desc: 'See exactly what AIwritehuman\'s AI humanizer changes in a draft: stock phrases, uniform rhythm and hedging, with its tones, settings and a worked example.'
   },
   '/ai-detector': {
     title: 'AI Detector with Sentence-Level Highlighting | AIwritehuman',
