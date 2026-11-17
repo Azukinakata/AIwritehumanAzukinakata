@@ -73,8 +73,10 @@ function injectPage(html, page) {
   return html
     .replace(/<h1 class="hero-title">[\s\S]*?<\/h1>/, () => `<h1 class="hero-title">${page.h1}</h1>`)
     .replace('</head>', () => `${SSR_FLAG}\n</head>`)
-    .replace('<footer>', () =>
-      `<section class="seo-article" aria-label="${page.h1.replace(/"/g, '&quot;')}">\n${page.body}\n</section>\n\n    <footer>`);
+    // Article goes straight under the hero so the reader lands on the page's
+    // content; the tool follows below it.
+    .replace('</header>', () =>
+      `</header>\n\n    <section class="seo-article" aria-label="${page.h1.replace(/"/g, '&quot;')}">\n${page.body}\n</section>`);
 }
 
 module.exports = { ROUTE_MODALS, buildPages, injectPage };

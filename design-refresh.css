@@ -11,3 +11,7 @@
 .refund-body th,.refund-body td,.seo-article th,.seo-article td{border:1px solid rgba(104,155,255,.25);padding:8px 10px;text-align:left;vertical-align:top}
 .refund-body th,.seo-article th{background:rgba(23,105,255,.16);color:#fff}
 .refund-body blockquote,.seo-article blockquote{border-left:3px solid #ffd83d;margin:12px 0 16px;padding:4px 0 4px 16px;color:#d1dded}
+/* article pages: show the whole body instead of the modal's scroll box */
+.seo-article .refund-body{max-height:none;overflow:visible;padding-right:0}
+.seo-article .refund-body p,.seo-article .refund-body li{font-size:.97rem}
+.seo-article .refund-body h4{font-size:1.1rem;color:#fff;margin:26px 0 8px}
