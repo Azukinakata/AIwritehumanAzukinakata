@@ -856,12 +856,16 @@ const SEO_ROUTES = {
     desc: 'Calibrate AIwritehuman\'s AI humanizer to each client\'s voice with per-client voice matching, built for agency and multi-client workflows.'
   },
   '/blog/how-to-make-ai-writing-sound-human': {
-    title: 'How to Make AI Writing Sound Human — AIwritehuman',
-    desc: 'Practical edits — sentence variation, cutting hedging, replacing stock transitions, getting specific — for making AI-generated drafts read naturally.'
+    title: 'How to Make AI Writing Sound Human: 8 Edits That Work',
+    desc: 'AI drafts read flat because of a few repeatable patterns. Eight practical edits that make ChatGPT and Claude text sound like a person wrote it.'
   },
   '/blog/ai-humanizer-vs-ai-detector': {
-    title: 'AI Humanizer vs AI Detector: Key Differences | AIwritehuman',
+    title: 'AI Humanizer vs AI Detector: Key Differences Explained',
     desc: 'A humanizer rewrites text; a detector scores it. See how each works, when to use them together, and where both fall short.'
+  },
+  '/blog/how-to-make-chatgpt-emails-sound-human': {
+    title: 'How to Make ChatGPT Emails Sound Human (With Examples)',
+    desc: 'ChatGPT emails often sound stiff and over-polished. Learn the common giveaways and a simple edit routine for client emails that sound like you.'
   },
   '/blog/how-to-humanize-chatgpt-text': {
     title: 'How to Humanize ChatGPT Text — AIwritehuman',

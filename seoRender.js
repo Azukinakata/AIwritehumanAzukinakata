@@ -26,6 +26,7 @@ const ROUTE_MODALS = {
   '/ai-humanizer-for-agencies':                    'aiHumanizerAgenciesModal',
   '/blog/how-to-make-ai-writing-sound-human':      'blogSoundHumanModal',
   '/blog/ai-humanizer-vs-ai-detector':             'blogVsModal',
+  '/blog/how-to-make-chatgpt-emails-sound-human':  'blogEmailsModal',
   '/blog/how-to-humanize-chatgpt-text':            'blogHumanizeChatgptModal',
   '/blog/ai-humanizer-for-google-business-profile': 'blogGbpModal',
 };
