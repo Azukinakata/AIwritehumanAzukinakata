@@ -1479,24 +1479,50 @@
   <div class="modal-overlay" id="aiDetectorModal" role="dialog" aria-modal="true" aria-label="AI detector for business writing">
     <div class="modal-box refund-box">
       <button type="button" class="modal-close" onclick="closeAiDetectorModal()" aria-label="Close">&times;</button>
-      <div class="modal-title">AI Detector for Business Writing</div>
+      <div class="modal-title">AI Detector with Sentence-Level Highlighting</div>
       <div class="modal-sub">AIwritehuman</div>
       <div class="refund-body">
-        <p>AIwritehuman includes a built-in AI detector &mdash; called AI Check &mdash; powered by Winston AI, so you can score any draft for AI-probability and see which sentences are flagged, before you send it.</p>
+        <p>Knowing that a draft "might be AI-written" is not much use. Knowing which sentences sound formulaic is. AIwritehuman's AI Check highlights sentences that read as machine-written, so you can see where to edit instead of guessing. It is built on Winston AI and sits next to the humanizer, so you can check and rewrite in the same place.</p>
 
-        <h4>How it works</h4>
-        <p>Run a draft through AI Check and it returns an overall AI-probability percentage plus sentence-level highlighting, so you can see which parts of a draft read as AI-generated rather than getting a single opaque score.</p>
+        <h4>What AI Check does</h4>
 
-        <h4>AI detector vs AI humanizer</h4>
-        <p>An AI detector scores text; it doesn't change it. Use AI Check as a diagnostic &mdash; run a draft, see what's flagged, then use the <a href="/ai-humanizer" onclick="event.preventDefault(); closeAiDetectorModal(); openAiHumanizerModal();">AI humanizer</a> to rewrite the flagged sections. Detector scores also vary between providers, and none should be treated as a certainty.</p>
+        <p>Paste text into the tool, click AI Check, and the draft comes back with an AI-probability estimate and highlighting at sentence level. It does not change your text. It is a diagnostic: it points to lines that have the patterns detectors associate with AI writing, such as very even sentence length, predictable phrasing and generic transitions.</p>
 
-        <h4>An honest limit</h4>
-        <p>No detector is perfect, and no humanizer can honestly guarantee it will defeat every detector on the market. AIwritehuman doesn't make that claim. AI Check exists so you can check your own work, not to promise a guaranteed score, and it isn't a substitute for your organisation's own disclosure requirements around AI-assisted writing.</p>
+        <h4>Why sentence-level highlighting matters</h4>
 
-        <h4>Pricing</h4>
-        <p>AI Check is available on paid plans &mdash; see full pricing on the homepage.</p>
+        <p>A single score for a whole document tells you little. Most drafts are a mix: some sentences feel natural and others feel templated. Highlighting shows which is which. You can leave the good lines alone and spend your time on the three or four that need work.</p>
 
-        <p><a href="/" onclick="event.preventDefault(); closeAiDetectorModal();">Try AIwritehuman free</a>.</p>
+        <h4>How to use it in your workflow</h4>
+
+        <ol><li><strong>Draft</strong> with your preferred AI tool, adding your own facts and examples.</li><li><strong>Humanize</strong> the draft to fix rhythm, repetition and stock phrasing.</li><li><strong>Run AI Check</strong> on the result.</li><li><strong>Edit the highlighted lines</strong> by hand. Add a specific detail, shorten a long sentence, or replace a generic phrase with your own wording.</li><li><strong>Check again</strong> if you like, then publish.</li></ol>
+
+        <h4>What highlighted sentences usually have in common</h4>
+
+        <ul><li><strong>Stock openers and transitions:</strong> "In today's fast-paced world", "Moreover", "It is important to note".</li><li><strong>General claims with no specifics:</strong> "Many businesses struggle with growth."</li><li><strong>Uniform rhythm:</strong> several sentences in a row of nearly identical length.</li><li><strong>Heavy hedging:</strong> "may potentially", "in some cases", "it could be argued".</li><li><strong>Neat lists of three</strong> that all follow the same structure.</li></ul>
+
+        <h4>Read the result with care</h4>
+
+        <p>AI detection is an estimate, not proof. Different detectors use different models and training data, so the same text can score differently from one tool to another. Short passages are unreliable, and edited text is hard to judge. A low score does not mean a draft is good, and a high score does not prove who wrote it. Use the result to improve your writing, and do not use a single score as the basis for a serious decision about someone's work.</p>
+
+        <h4>Who uses it</h4>
+
+        <ul><li><strong>Editors and content leads</strong> reviewing drafts before they publish.</li><li><strong>Writers and marketers</strong> polishing AI-assisted copy.</li><li><strong>Agencies</strong> doing a final quality check for clients.</li><li><strong>Teams</strong> that want to flag formulaic passages for a human edit.</li></ul>
+
+        <h4>AI Check and the humanizer together</h4>
+
+        <p>AI Check answers "where does this still sound like a model?" The humanizer answers "how do I fix it?" Using them in sequence is faster than switching between tools. AIwritehuman does not guarantee any specific detector result. Its aim is clearer, more natural writing, and you should follow your organisation's policy on disclosing AI assistance.</p>
+
+        <h4>Frequently asked questions</h4>
+
+        <p><strong>Is AI detection accurate?</strong> It is moderately reliable and inconsistent. Treat it as one signal among several.</p>
+
+        <p><strong>Does AI Check change my text?</strong> No. It only highlights. The humanizer does the rewriting.</p>
+
+        <p><strong>What powers AI Check?</strong> It is built on Winston AI.</p>
+
+        <p><strong>Is my text stored?</strong> Submitted text is not retained afterwards; only a one-way hash is kept for abuse prevention, as set out in the privacy policy.</p>
+
+        <p><strong>Can I check text in other languages?</strong> AIwritehuman currently supports English and Chinese for humanizing. Check the tool for detector language coverage before relying on it for Chinese.</p>
       </div>
     </div>
   </div>
@@ -1555,30 +1581,58 @@
   <div class="modal-overlay" id="voiceMatchingModal" role="dialog" aria-modal="true" aria-label="Voice matching">
     <div class="modal-box refund-box">
       <button type="button" class="modal-close" onclick="closeVoiceMatchingModal()" aria-label="Close">&times;</button>
-      <div class="modal-title">Match Your Writing Style with AIwritehuman</div>
+      <div class="modal-title">Make AI Text Sound Like You with Voice Matching</div>
       <div class="modal-sub">AIwritehuman</div>
       <div class="refund-body">
-        <p>Paste two or three paragraphs of your own writing and AIwritehuman uses it as a voice reference, calibrating rewritten drafts to your rhythm, phrasing, and tone instead of a generic &ldquo;natural&rdquo; style.</p>
+        <p>AI drafts share a default voice: polite, balanced and slightly generic. If you publish under your own name or your company's, that default is the problem. Readers who know how you write notice when it changes. Voice matching fixes this by giving the editing process a sample of your real writing to follow.</p>
 
-        <h4>How it works</h4>
-        <p>Add a writing sample in the voice-calibration field before you humanize a draft. AIwritehuman's second audit pass checks the rewritten output against that sample alongside your tone and style settings, so the result reads closer to how you actually write.</p>
+        <h4>What voice matching does</h4>
 
-        <h4>Style settings you can adjust</h4>
-        <ul>
-          <li>Professional tone</li>
-          <li>Academic writing</li>
-          <li>Blog and SEO content</li>
-          <li>Casual communication</li>
-          <li>Creative writing</li>
-          <li>Scientific writing</li>
-          <li>Technical documentation</li>
-          <li>British English</li>
-        </ul>
+        <p>In AIwritehuman's Voice Calibration box, you paste two or three paragraphs of your own writing. When you humanize a draft, the engine uses that sample as a reference and adjusts the rewrite towards your habits instead of a generic tone. The sample is optional. You can run the humanizer without it, and add it when voice matters.</p>
 
-        <h4>Who uses voice matching</h4>
-        <p>Agencies and consultants managing more than one client voice &mdash; see <a href="/ai-humanizer-for-agencies" onclick="event.preventDefault(); closeVoiceMatchingModal(); openAiHumanizerAgenciesModal();">AI humanizer for agencies</a> &mdash; founders who want AI-assisted drafts to sound like their own writing, and content teams keeping a consistent brand voice across contributors.</p>
+        <h4>What the sample teaches it</h4>
 
-        <p><a href="/" onclick="event.preventDefault(); closeVoiceMatchingModal();">Add a writing sample and try it</a>, free.</p>
+        <p>A short sample is enough to show several things:</p>
+
+        <ul><li><strong>Sentence length.</strong> Do you write short, direct sentences, or longer ones that carry several clauses?</li><li><strong>Punctuation habits.</strong> Do you use dashes, brackets, semicolons or lots of full stops?</li><li><strong>Vocabulary.</strong> Do you say "use" or "utilise"? "Start" or "commence"? Plain words or more formal ones?</li><li><strong>Register.</strong> Do you address the reader directly as "you"? Do you use contractions?</li><li><strong>Spelling.</strong> British or American English. AIwritehuman also has a British English strength setting.</li></ul>
+
+        <h4>How to choose a good sample</h4>
+
+        <p>The result is only as good as the reference, so pick carefully:</p>
+
+        <ol><li><strong>Use writing you wrote yourself,</strong> not text you edited from an AI draft.</li><li><strong>Match the purpose.</strong> For client emails, use previous client emails. For blog content, use a blog post you are proud of.</li><li><strong>Use two to three paragraphs.</strong> One sentence is too little to show a pattern. A whole report is more than needed.</li><li><strong>Avoid quotes and boilerplate.</strong> Legal footers and copied text distort the picture.</li><li><strong>Keep a different sample for each context.</strong> Your board report voice and your newsletter voice are not the same.</li></ol>
+
+        <h4>Voice matching plus tone settings</h4>
+
+        <p>Voice calibration works alongside the other controls. You can choose a target tone (Standard, Professional, Academic, Blog/SEO, Casual, Creative, Scientific or Technical) and adjust humanisation intensity, British English strength, academic hedging and sentence variation. If your sample is casual and you choose Professional tone, the result will land between the two. For the closest match, keep the tone setting consistent with the sample.</p>
+
+        <h4>Who it helps</h4>
+
+        <ul><li><strong>Founders and consultants</strong> who write under their own name and use AI to speed up first drafts.</li><li><strong>Agencies</strong> that need copy to follow a client's established voice.</li><li><strong>Content teams</strong> that want a consistent house style across several writers.</li><li><strong>Professionals</strong> whose colleagues would notice if their emails suddenly sounded different.</li></ul>
+
+        <h4>What voice matching does not do</h4>
+
+        <p>It does not copy another person's style without permission, and it does not invent facts or opinions. It also does not guarantee any particular AI-detector result. It adjusts rhythm, wording and tone so your drafts read like you. The facts, claims and judgement remain yours, and you should review the final text before publishing.</p>
+
+        <h4>Privacy</h4>
+
+        <p>Your sample is used to produce your result. Submitted text is not retained afterwards; only a one-way hash is kept for abuse prevention, as set out in the privacy policy.</p>
+
+        <h4>How to get started</h4>
+
+        <ol><li>Paste your AI draft into the input panel.</li><li>Paste two or three paragraphs of your own writing into Voice Calibration.</li><li>Choose a tone and adjust the settings.</li><li>Click Humanize, then review the result and use AI Check to see which sentences still sound formulaic.</li></ol>
+
+        <h4>Frequently asked questions</h4>
+
+        <p><strong>Do I have to provide a sample?</strong> No. It is optional, but it makes the output noticeably closer to your own style.</p>
+
+        <p><strong>How long should the sample be?</strong> Two or three paragraphs is enough.</p>
+
+        <p><strong>Can I use someone else's writing as the sample?</strong> Use your own writing, or writing you have permission to use.</p>
+
+        <p><strong>Does it work in British English?</strong> Yes. There is a British English strength setting, and a sample in British spelling helps.</p>
+
+        <p><strong>Which languages are supported?</strong> English and Chinese.</p>
       </div>
     </div>
   </div>
